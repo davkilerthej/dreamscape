@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Minecraft Server</title>
+    <meta name="description" content="Create your Minecraft server account to join thousands of players, access exclusive features, and start your adventure today.">
+    <meta name="keywords" content="minecraft server register, create account, sign up, minecraft account registration">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>Minecraft Server</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="gamemodes.html">Game Modes</a>
+                <a href="about.html">About</a>
+                <a href="news.html">News</a>
+                <a href="shop.html">Shop</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary active">Register</a>
+            </div>
+            
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="mobile-logo">
+                <i class="fas fa-cube"></i>
+                <span>Minecraft Server</span>
+            </div>
+            <button class="mobile-menu-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-menu-content">
+            <a href="index.html">Home</a>
+            <a href="gamemodes.html">Game Modes</a>
+            <a href="about.html">About</a>
+            <a href="news.html">News</a>
+            <a href="shop.html">Shop</a>
+            <a href="contact.html">Contact</a>
+            <div class="mobile-menu-actions">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary active">Register</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Registration Section -->
+        <section class="auth-section">
+            <div class="container">
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h1>Join the Adventure</h1>
+                        <p>Create your account and start your Minecraft journey today</p>
+                    </div>
+                    
+                    <div class="auth-form-container">
+                        <form class="auth-form" id="registerForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" required placeholder="Choose a unique username">
+                                <div class="input-hint">Username must be 3-20 characters long and contain only letters, numbers, and underscores</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <div class="password-input">
+                                    <input type="password" id="password" name="password" required placeholder="Create a strong password">
+                                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar">
+                                        <div class="strength-fill" id="strengthFill"></div>
+                                    </div>
+                                    <span class="strength-text" id="strengthText">Password strength</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <div class="password-input">
+                                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="birthdate">Date of Birth</label>
+                                <input type="date" id="birthdate" name="birthdate" required>
+                                <div class="input-hint">You must be at least 13 years old to create an account</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <select id="country" name="country" required>
+                                    <option value="">Select your country</option>
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="JP">Japan</option>
+                                    <option value="BR">Brazil</option>
+                                    <option value="IN">India</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="newsletter" id="newsletter">
+                                    <span class="checkmark"></span>
+                                    Subscribe to our newsletter for updates and special offers
+                                </label>
+                                
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="terms" id="terms" required>
+                                    <span class="checkmark"></span>
+                                    I agree to the <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>
+                                </label>
+                                
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="age" id="age" required>
+                                    <span class="checkmark"></span>
+                                    I confirm that I am at least 13 years old
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <i class="fas fa-user-plus"></i>
+                                Create Account
+                            </button>
+                        </form>
+                        
+                        <div class="auth-divider">
+                            <span>or sign up with</span>
+                        </div>
+                        
+                        <div class="social-login">
+                            <button class="btn btn-social btn-discord">
+                                <i class="fab fa-discord"></i>
+                                Discord
+                            </button>
+                            <button class="btn btn-social btn-microsoft">
+                                <i class="fab fa-microsoft"></i>
+                                Microsoft
+                            </button>
+                        </div>
+                        
+                        <div class="auth-footer">
+                            <p>Already have an account? <a href="login.html">Login here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Benefits Section -->
+        <section class="benefits-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Why Register?</h2>
+                    <p>Join thousands of players and unlock exclusive features</p>
+                </div>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3>Access All Game Modes</h3>
+                        <p>Play on all our servers including Survival, Creative, PvP, Factions, and more with your registered account.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Earn Achievements</h3>
+                        <p>Track your progress, unlock achievements, and compete on leaderboards with other players.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3>Shop & Customization</h3>
+                        <p>Purchase ranks, custom items, and exclusive cosmetics to enhance your gameplay experience.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Join Community</h3>
+                        <p>Connect with other players, join guilds, and participate in community events and tournaments.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Secure Account</h3>
+                        <p>Your account is protected with industry-standard security measures and two-factor authentication.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Priority Support</h3>
+                        <p>Get faster support and access to exclusive help channels for registered users.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-cube"></i>
+                        <span>Minecraft Server</span>
+                    </div>
+                    <p>Join thousands of players on our premium Minecraft server network. Experience the best gameplay with our custom features and dedicated community.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" aria-label="Reddit"><i class="fab fa-reddit"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="gamemodes.html">Game Modes</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="news.html">News & Updates</a></li>
+                        <li><a href="shop.html">Server Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Game Modes</h4>
+                    <ul>
+                        <li><a href="gamemodes.html#survival">Survival</a></li>
+                        <li><a href="gamemodes.html#creative">Creative</a></li>
+                        <li><a href="gamemodes.html#pvp">PvP Arena</a></li>
+                        <li><a href="gamemodes.html#factions">Factions</a></li>
+                        <li><a href="gamemodes.html#minigames">Minigames</a></li>
+                        <li><a href="gamemodes.html#skyblock">Skyblock</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="help.html">Help Center</a></li>
+                        <li><a href="rules.html">Server Rules</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="tickets.html">Support Tickets</a></li>
+                        <li><a href="status.html">Server Status</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 Minecraft Server. All rights reserved.</p>
+                    <div class="footer-bottom-links">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="terms.html">Terms of Service</a>
+                        <a href="cookies.html">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/animations.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script>
+        // Password visibility toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordToggles = document.querySelectorAll('.password-toggle');
+            
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fa-eye');
+                    icon.classList.toggle('fa-eye-slash');
+                });
+            });
+            
+            // Password strength checker
+            const passwordInput = document.getElementById('password');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (passwordInput && strengthFill && strengthText) {
+                passwordInput.addEventListener('input', function() {
+                    const password = this.value;
+                    const strength = checkPasswordStrength(password);
+                    updatePasswordStrength(strength);
+                });
+            }
+            
+            // Form validation
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (validateForm()) {
+                        const submitButton = this.querySelector('button[type="submit"]');
+                        const originalText = submitButton.innerHTML;
+                        
+                        // Show loading state
+                        submitButton.innerHTML = '<span class="loading-spinner small"></span> Creating Account...';
+                        submitButton.disabled = true;
+                        
+                        // Simulate registration process
+                        setTimeout(() => {
+                            // Reset button
+                            submitButton.innerHTML = originalText;
+                            submitButton.disabled = false;
+                            
+                            // Show success message and redirect
+                            showAlert('Account created successfully! Welcome to our community!', 'success', 3000);
+                            
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 3000);
+                        }, 2000);
+                    }
+                });
+            }
+        });
+        
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let score = 0;
+            
+            if (password.length >= 8) score++;
+            if (password.match(/[a-z]/)) score++;
+            if (password.match(/[A-Z]/)) score++;
+            if (password.match(/[0-9]/)) score++;
+            if (password.match(/[^a-zA-Z0-9]/)) score++;
+            
+            if (score < 2) return 'weak';
+            if (score < 4) return 'medium';
+            return 'strong';
+        }
+        
+        function updatePasswordStrength(strength) {
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (strengthFill && strengthText) {
+                strengthFill.className = 'strength-fill ' + strength;
+                strengthText.textContent = 'Password strength: ' + strength.charAt(0).toUpperCase() + strength.slice(1);
+            }
+        }
+        
+        // Form validation
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+            const age = document.getElementById('age').checked;
+            
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match!', 'error', 3000);
+                return false;
+            }
+            
+            if (!terms) {
+                showAlert('You must agree to the Terms of Service and Privacy Policy', 'error', 3000);
+                return false;
+            }
+            
+            if (!age) {
+                showAlert('You must confirm that you are at least 13 years old', 'error', 3000);
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Social registration handlers
+        function handleDiscordRegistration() {
+            showAlert('Discord registration coming soon!', 'info', 3000);
+        }
+        
+        function handleMicrosoftRegistration() {
+            showAlert('Microsoft registration coming soon!', 'info', 3000);
+        }
+        
+        // Add event listeners to social buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const discordBtn = document.querySelector('.btn-discord');
+            const microsoftBtn = document.querySelector('.btn-microsoft');
+            
+            if (discordBtn) {
+                discordBtn.addEventListener('click', handleDiscordRegistration);
+            }
+            
+            if (microsoftBtn) {
+                microsoftBtn.addEventListener('click', handleMicrosoftRegistration);
+            }
+        });
+    </script>
+</body>
+</html> 

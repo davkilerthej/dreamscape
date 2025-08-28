@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Minecraft Server</title>
+    <meta name="description" content="Thank you for your purchase! Your order has been confirmed and your items are now available on our Minecraft server.">
+    <meta name="keywords" content="thank you, purchase confirmation, order confirmed, minecraft server">
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>Minecraft Server</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="gamemodes.html">Game Modes</a>
+                <a href="about.html">About</a>
+                <a href="news.html">News</a>
+                <a href="shop.html">Shop</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="mobile-logo">
+                <i class="fas fa-cube"></i>
+                <span>Minecraft Server</span>
+            </div>
+            <button class="mobile-menu-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-menu-content">
+            <a href="index.html">Home</a>
+            <a href="gamemodes.html">Game Modes</a>
+            <a href="about.html">About</a>
+            <a href="news.html">News</a>
+            <a href="shop.html">Shop</a>
+            <a href="contact.html">Contact</a>
+            <div class="mobile-menu-actions">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Thank You Section -->
+        <section class="thank-you-section">
+            <div class="container">
+                <div class="thank-you-content">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    
+                    <h1>Thank You for Your Purchase!</h1>
+                    <p class="thank-you-message">Your order has been successfully processed and confirmed. Your items are now available on our Minecraft server!</p>
+                    
+                    <div class="order-details">
+                        <h2>Order Details</h2>
+                        <div class="order-info">
+                            <div class="info-row">
+                                <span class="info-label">Order Number:</span>
+                                <span class="info-value" id="orderNumber">#12345</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Order Date:</span>
+                                <span class="info-value" id="orderDate">December 15, 2024</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Total Amount:</span>
+                                <span class="info-value" id="orderTotal">$0.00</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Payment Method:</span>
+                                <span class="info-value" id="paymentMethod">Credit Card</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="purchased-items">
+                        <h2>Items Purchased</h2>
+                        <div class="items-list" id="purchasedItems">
+                            <!-- Items will be populated from order data -->
+                        </div>
+                    </div>
+                    
+                    <div class="next-steps">
+                        <h2>What's Next?</h2>
+                        <div class="steps-grid">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h3>Check Your Email</h3>
+                                    <p>We've sent you a confirmation email with all the details of your purchase.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h3>Join the Server</h3>
+                                    <p>Log into our Minecraft server to access your newly purchased items and features.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h3>Enjoy Your Items</h3>
+                                    <p>Your items are automatically added to your account and ready to use immediately.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="gamemodes.html" class="btn btn-primary btn-large">
+                            <i class="fas fa-play"></i>
+                            Join Server Now
+                        </a>
+                        <a href="inventory.html" class="btn btn-outline btn-large">
+                            <i class="fas fa-box"></i>
+                            View My Inventory
+                        </a>
+                        <a href="shop.html" class="btn btn-outline btn-large">
+                            <i class="fas fa-shopping-cart"></i>
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support Section -->
+        <section class="support-section">
+            <div class="container">
+                <div class="support-content">
+                    <h2>Need Help?</h2>
+                    <p>If you have any questions about your purchase or need assistance, our support team is here to help!</p>
+                    
+                    <div class="support-options">
+                        <div class="support-option">
+                            <div class="option-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Email Support</h3>
+                            <p>Get help via email within 24 hours</p>
+                            <a href="contact.html" class="btn btn-outline">Contact Support</a>
+                        </div>
+                        
+                        <div class="support-option">
+                            <div class="option-icon">
+                                <i class="fab fa-discord"></i>
+                            </div>
+                            <h3>Discord Community</h3>
+                            <p>Join our Discord for instant help</p>
+                            <a href="#" class="btn btn-outline">Join Discord</a>
+                        </div>
+                        
+                        <div class="support-option">
+                            <div class="option-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h3>Help Center</h3>
+                            <p>Browse our comprehensive help articles</p>
+                            <a href="help.html" class="btn btn-outline">Visit Help Center</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section class="community-section">
+            <div class="container">
+                <div class="community-content">
+                    <h2>Join Our Community</h2>
+                    <p>Connect with thousands of other players and stay updated with the latest server news and events.</p>
+                    
+                    <div class="social-links-large">
+                        <a href="#" class="social-link discord">
+                            <i class="fab fa-discord"></i>
+                            <span>Discord</span>
+                        </a>
+                        <a href="#" class="social-link twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="#" class="social-link youtube">
+                            <i class="fab fa-youtube"></i>
+                            <span>YouTube</span>
+                        </a>
+                        <a href="#" class="social-link reddit">
+                            <i class="fab fa-reddit"></i>
+                            <span>Reddit</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-cube"></i>
+                    <span>Minecraft Server</span>
+                </div>
+                <p>Join thousands of players on our premium Minecraft server network. Experience the best gameplay with our custom features and dedicated community.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" aria-label="Reddit"><i class="fab fa-reddit"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="gamemodes.html">Game Modes</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="news.html">News & Updates</a></li>
+                    <li><a href="shop.html">Server Shop</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Game Modes</h4>
+                <ul>
+                    <li><a href="gamemodes.html#survival">Survival</a></li>
+                    <li><a href="gamemodes.html#creative">Creative</a></li>
+                    <li><a href="gamemodes.html#pvp">PvP Arena</a></li>
+                    <li><a href="gamemodes.html#factions">Factions</a></li>
+                    <li><a href="gamemodes.html#minigames">Minigames</a></li>
+                    <li><a href="gamemodes.html#skyblock">Skyblock</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="help.html">Help Center</a></li>
+                    <li><a href="rules.html">Server Rules</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="tickets.html">Support Tickets</a></li>
+                    <li><a href="status.html">Server Status</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <p>&copy; 2024 Minecraft Server. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="cookies.html">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/animations.js"></script>
+    
+    <!-- Thank You Page Script -->
+    <script>
+        // Generate random order number and populate order details
+        document.addEventListener('DOMContentLoaded', function() {
+            generateOrderDetails();
+            populatePurchasedItems();
+        });
+
+        // Generate random order details
+        function generateOrderDetails() {
+            const orderNumber = '#' + Math.floor(Math.random() * 90000) + 10000;
+            const orderDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            document.getElementById('orderNumber').textContent = orderNumber;
+            document.getElementById('orderDate').textContent = orderDate;
+            
+            // Try to get order total from sessionStorage (if available)
+            const savedTotal = sessionStorage.getItem('cartTotal');
+            if (savedTotal) {
+                const total = parseFloat(savedTotal);
+                const tax = total * 0.08;
+                const finalTotal = total + tax;
+                document.getElementById('orderTotal').textContent = `$${finalTotal.toFixed(2)}`;
+            }
+        }
+
+        // Populate purchased items (simulated)
+        function populatePurchasedItems() {
+            const purchasedItems = document.getElementById('purchasedItems');
+            
+            // Sample items (in a real scenario, this would come from the order data)
+            const sampleItems = [
+                { name: 'Premium Rank', price: 19.99, quantity: 1 },
+                { name: 'VIP Package', price: 9.99, quantity: 1 },
+                { name: 'Server Coins', price: 4.99, quantity: 1 }
+            ];
+            
+            sampleItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'purchased-item';
+                itemElement.innerHTML = `
+                    <div class="item-info">
+                        <h4>${item.name}</h4>
+                        <span class="item-price">$${item.price.toFixed(2)}</span>
+                    </div>
+                    <div class="item-quantity">
+                        <span>Qty: ${item.quantity}</span>
+                    </div>
+                    <div class="item-total">
+                        $${(item.price * item.quantity).toFixed(2)}
+                    </div>
+                `;
+                purchasedItems.appendChild(itemElement);
+            });
+        }
+
+        // Auto-redirect to server after 30 seconds
+        setTimeout(() => {
+            const redirectMessage = document.createElement('div');
+            redirectMessage.className = 'redirect-notice';
+            redirectMessage.innerHTML = `
+                <p><i class="fas fa-clock"></i> You will be redirected to the server in 10 seconds...</p>
+            `;
+            
+            const thankYouContent = document.querySelector('.thank-you-content');
+            thankYouContent.appendChild(redirectMessage);
+            
+            setTimeout(() => {
+                window.location.href = 'gamemodes.html';
+            }, 10000);
+        }, 20000);
+    </script>
+</body>
+</html> 
