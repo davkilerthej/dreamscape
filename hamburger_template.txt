@@ -1,0 +1,187 @@
+<!-- HAMBURGER MENU SCRIPT -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const body = document.body;
+        const overlay = document.querySelector('.menu-overlay');
+        
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        });
+        
+        // Close menu when clicking on the overlay
+        overlay.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+            body.classList.remove('menu-open');
+        });
+    });
+</script>
+
+<!-- HAMBURGER MENU CSS -->
+<style>
+    /* Prevent scrolling when menu is open */
+    body.menu-open {
+        overflow: hidden;
+    }
+
+    /* Create overlay for mobile menu */
+    .menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 89;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    body.menu-open .menu-overlay {
+        display: block;
+        opacity: 1;
+    }
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1em 2em;
+        background: rgba(26, 35, 58, 0.8);
+        backdrop-filter: blur(10px);
+        position: relative;
+        z-index: 100;
+    }
+
+    .nav-menu {
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Hamburger Menu Styling */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 21px;
+        cursor: pointer;
+        z-index: 200;
+        position: relative;
+    }
+
+    .hamburger span {
+        display: block;
+        height: 3px;
+        width: 100%;
+        background-color: white;
+        border-radius: 3px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Hamburger animation */
+    .hamburger.active span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* Responsive styles */
+    @media screen and (max-width: 768px) {
+        .hamburger {
+            display: flex;
+        }
+
+        .nav-menu {
+            position: fixed;
+            left: -66.67%;
+            top: 0;
+            flex-direction: column;
+            background-color: rgba(26, 35, 58, 0.95);
+            width: 66.67%;
+            height: 100vh;
+            z-index: 90;
+            text-align: center;
+            justify-content: center;
+            transition: 0.3s;
+            padding-top: 60px;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu.active {
+            left: 0;
+        }
+
+        .nav-menu a {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+            border-radius: 0;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-links {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            z-index: 91;
+        }
+
+        .auth-links a, .auth-links span {
+            margin: 5px 0;
+        }
+    }
+</style>
+
+<!-- HAMBURGER MENU HTML -->
+<div class="menu-overlay"></div>
+<nav>
+    <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div class="nav-menu">
+        <a href="index.php">Home</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
+        <a href="news.php">News</a>
+        <a href="shop.php">Shop</a>
+        <a href="inventory.php">Inventory</a>
+    </div>
+    <div class="auth-links">
+        <?php if (isset($_SESSION['username'])): ?>
+            <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            <a href="logout.php">Logout</a>
+        <?php else: ?>
+            <a href="register.php">Register</a>
+            <a href="login.php">Login</a>
+        <?php endif; ?>
+    </div>
+</nav> 

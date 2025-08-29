@@ -1,0 +1,430 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$item = $_POST['item'];
+$minecraftUsername = $_POST['minecraft_username'];
+
+// Connect to the database
+$conn = new mysqli('localhost', 'root', '', 'dreamscape');
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check if the Minecraft username exists
+$stmt = $conn->prepare("SELECT * FROM players WHERE minecraft_username = ?");
+$stmt->bind_param('s', $minecraftUsername);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows === 0) {
+    $error = "Minecraft username not found. Please check your username.";
+} else {
+    // Redirect to payment page
+    header("Location: payment.php?item=" . urlencode($item) . "&username=" . urlencode($minecraftUsername));
+    exit;
+}
+
+$stmt->close();
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validate Purchase - Dreamscape</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #1a233a, #4a5673);
+            background-size: 400% 400%;
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em 2em;
+            background: rgba(26, 35, 58, 0.8);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 100;
+        }
+
+        nav a {
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            transition: all 0.3s ease-in-out;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            background: white;
+            color: #1a233a;
+            border-color: white;
+        }
+
+        .auth-links {
+            display: flex;
+            align-items: center;
+        }
+
+        main {
+            padding: 3em 1em;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+        }
+
+        .validation-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5em;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .validation-header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .validation-header h2 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+            color: #fff;
+        }
+
+        .validation-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+        }
+
+        .purchase-summary {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5em;
+            border-radius: 15px;
+            margin-bottom: 2em;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5em 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .summary-value {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+            padding: 1em;
+            border-radius: 10px;
+            margin-bottom: 1.5em;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Prevent scrolling when menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Create overlay for mobile menu */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 89;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        body.menu-open .menu-overlay {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Hamburger Menu Styling */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 200;
+            position: relative;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger animation */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -66.67%;
+                top: 0;
+                flex-direction: column;
+                background-color: rgba(26, 35, 58, 0.95);
+                width: 66.67%;
+                height: 100vh;
+                z-index: 90;
+                text-align: center;
+                justify-content: center;
+                transition: 0.3s;
+                padding-top: 60px;
+                box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu a {
+                margin: 10px 0;
+                font-size: 1.2rem;
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 15px 0;
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-menu a:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+
+            /* Only apply these styles to the mobile auth-links */
+            .mobile-auth-links {
+                display: flex;
+                position: absolute;
+                bottom: 40px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                z-index: 91;
+            }
+
+            .mobile-auth-links a, .mobile-auth-links span {
+                margin: 5px 0;
+            }
+            
+            /* Hide desktop auth-links in mobile view */
+            .desktop-auth-links {
+                display: none;
+            }
+        }
+
+        /* Desktop auth-links styling (default) */
+        .desktop-auth-links {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Hide mobile auth-links in desktop view */
+        .mobile-auth-links {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-overlay"></div>
+    <nav>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.php">Home</a>
+            <a href="about.php">About</a>
+            <a href="contact.php">Contact</a>
+            <a href="news.php">News</a>
+            <a href="shop.php">Shop</a>
+            <a href="inventory.php">Inventory</a>
+            
+            <!-- Auth links inside mobile menu -->
+            <div class="mobile-auth-links">
+                <?php if (isset($_SESSION['username'])): ?>
+                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                    <a href="logout.php">Logout</a>
+                <?php else: ?>
+                    <a href="register.php">Register</a>
+                    <a href="login.php">Login</a>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+        <!-- Auth links for desktop view -->
+        <div class="desktop-auth-links">
+            <?php if (isset($_SESSION['username'])): ?>
+                <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="register.php">Register</a>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
+    </nav>
+
+    <main>
+        <div class="validation-container">
+            <div class="validation-header">
+                <h2>Validate Purchase</h2>
+                <p>Please review your purchase details before proceeding</p>
+            </div>
+
+            <?php if (isset($error)): ?>
+                <div class="error-message">
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="purchase-summary">
+                <div class="summary-item">
+                    <span class="summary-label">Item:</span>
+                    <span class="summary-value"><?php echo htmlspecialchars($item); ?></span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Minecraft Username:</span>
+                    <span class="summary-value"><?php echo htmlspecialchars($minecraftUsername); ?></span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="shop.php" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            const body = document.body;
+            const overlay = document.querySelector('.menu-overlay');
+            
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+                body.classList.toggle('menu-open');
+            });
+            
+            // Close menu when clicking on the overlay
+            overlay.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+        });
+    </script>
+</body>
+</html>

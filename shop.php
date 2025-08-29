@@ -1,0 +1,459 @@
+<?php
+session_start(); // Start session
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            const body = document.body;
+            const overlay = document.querySelector('.menu-overlay');
+            
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+                body.classList.toggle('menu-open');
+            });
+            
+            // Close menu when clicking on the overlay
+            overlay.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #1a233a, #4a5673);
+            background-size: 400% 400%;
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em 2em;
+            background: transparent;
+            position: relative;
+            z-index: 100;
+        }
+
+        nav a {
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            transition: all 0.3s ease-in-out;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            background: white;
+            color: #1a233a;
+            border-color: white;
+        }
+
+        .auth-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-links a {
+            margin: 0 5px;
+        }
+
+        main {
+            padding: 3em 1em;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .shop-header {
+            margin-bottom: 3em;
+            text-align: center;
+        }
+
+        .shop-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: #fff;
+        }
+
+        .shop-header p {
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2em;
+            padding: 1em;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2em;
+            text-align: left;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1.5em;
+        }
+
+        .product-card h2 {
+            font-size: 1.8em;
+            margin: 0 0 0.5em 0;
+            color: #fff;
+        }
+
+        .product-card .description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5em;
+            flex-grow: 1;
+        }
+
+        .product-card .features {
+            margin: 1em 0;
+            padding-left: 1.2em;
+        }
+
+        .product-card .features li {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5em;
+        }
+
+        .product-card .price {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #4CAF50;
+            margin: 1em 0;
+            text-align: center;
+        }
+
+        .buy-button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: calc(100% - 2em);
+            margin: 0 1em;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .buy-button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        /* Prevent scrolling when menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Create overlay for mobile menu */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 89;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        body.menu-open .menu-overlay {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Hamburger Menu Styling */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 200;
+            position: relative;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger animation */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: flex;
+                margin-right: 15px;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -66.67%;
+                top: 0;
+                flex-direction: column;
+                background-color: rgba(26, 35, 58, 0.95);
+                width: 66.67%;
+                height: 100vh;
+                z-index: 90;
+                text-align: center;
+                justify-content: flex-start;
+                transition: 0.3s;
+                padding-top: 60px;
+                box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            /* Mobile welcome text specific styling */
+            .mobile-auth-links span {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+                padding: 0 10px;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu a {
+                margin: 10px 0;
+                font-size: 1.2rem;
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 15px 0;
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-menu a:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+
+            /* Only apply these styles to the mobile auth-links */
+            .mobile-auth-links {
+                display: flex;
+                position: absolute;
+                bottom: 40px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                z-index: 91;
+            }
+
+            .mobile-auth-links a, .mobile-auth-links span {
+                margin: 5px 0;
+            }
+            
+            /* Hide desktop auth-links in mobile view */
+            .desktop-auth-links {
+                display: none;
+            }
+        }
+
+        /* Desktop auth-links styling (default) */
+        .desktop-auth-links {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Hide mobile auth-links in desktop view */
+        .mobile-auth-links {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-overlay"></div>
+    <nav>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.php">Home</a>
+            <a href="about.php">About</a>
+            <a href="contact.php">Contact</a>
+            <a href="news.php">News</a>
+            <a href="shop.php">Shop</a>
+            <a href="inventory.php">Inventory</a>
+            
+            <!-- Auth links inside mobile menu -->
+            <div class="mobile-auth-links">
+                <?php if (isset($_SESSION['username'])): ?>
+                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                    <a href="logout.php">Logout</a>
+                <?php else: ?>
+                    <a href="register.php">Register</a>
+                    <a href="login.php">Login</a>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+        <!-- Auth links for desktop view -->
+        <div class="desktop-auth-links">
+            <?php if (isset($_SESSION['username'])): ?>
+                <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="register.php">Register</a>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
+    </nav>
+
+    <main>
+        <div class="shop-header">
+            <h1>Dreamscape Shop</h1>
+            <p>Enhance your gameplay experience with exclusive ranks and perks</p>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <span class="product-badge">Most Popular</span>
+                <img src="images/vip.jpg" alt="VIP Rank">
+                <h2>VIP Rank</h2>
+                <p class="description">Elevate your gameplay with exclusive perks and features designed for the distinguished player.</p>
+                <ul class="features">
+                    <li>Access to VIP-only servers</li>
+                    <li>Exclusive cosmetic items</li>
+                    <li>Priority server access</li>
+                    <li>Special chat prefix</li>
+                    <li>Daily rewards bonus</li>
+                </ul>
+                <div class="price">$1.00</div>
+                <a href="purchase.php?item=VIP" class="buy-button">Purchase VIP</a>
+            </div>
+
+            <div class="product-card">
+                <span class="product-badge">Best Value</span>
+                <img src="images/premium.jpg" alt="Premium Rank">
+                <h2>Premium Rank</h2>
+                <p class="description">Experience Dreamscape at its finest with our premium membership package.</p>
+                <ul class="features">
+                    <li>All VIP features included</li>
+                    <li>Custom particle effects</li>
+                    <li>Double XP boost</li>
+                    <li>Premium support access</li>
+                    <li>Exclusive monthly rewards</li>
+                </ul>
+                <div class="price">$5.00</div>
+                <a href="purchase.php?item=Premium" class="buy-button">Purchase Premium</a>
+            </div>
+
+            <div class="product-card">
+                <span class="product-badge">Ultimate</span>
+                <img src="images/ultimate.jpg" alt="Ultimate Rank">
+                <h2>Ultimate Rank</h2>
+                <p class="description">The ultimate Dreamscape experience with all features unlocked.</p>
+                <ul class="features">
+                    <li>All Premium features included</li>
+                    <li>Custom skin creation</li>
+                    <li>Triple XP boost</li>
+                    <li>Private game hosting</li>
+                    <li>Exclusive events access</li>
+                </ul>
+                <div class="price">$20.00</div>
+                <a href="purchase.php?item=Ultimate" class="buy-button">Purchase Ultimate</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

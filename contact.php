@@ -1,0 +1,419 @@
+<?php
+session_start(); // Start session
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dreamscape - Contact</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            const body = document.body;
+            const overlay = document.querySelector('.menu-overlay');
+            
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+                body.classList.toggle('menu-open');
+            });
+            
+            // Close menu when clicking on the overlay
+            overlay.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #1a233a, #4a5673);
+            background-size: 400% 400%;
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Prevent scrolling when menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Create overlay for mobile menu */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 89;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        body.menu-open .menu-overlay {
+            display: block;
+            opacity: 1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em 2em;
+            background: transparent;
+            position: relative;
+            z-index: 100;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger Menu Styling */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 200;
+            position: relative;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger animation */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: flex;
+                margin-right: 15px;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -66.67%;
+                top: 0;
+                flex-direction: column;
+                background-color: rgba(26, 35, 58, 0.95);
+                width: 66.67%;
+                height: 100vh;
+                z-index: 90;
+                text-align: center;
+                justify-content: flex-start;
+                transition: 0.3s;
+                padding-top: 60px;
+                box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            /* Mobile welcome text specific styling */
+            .mobile-auth-links span {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+                padding: 0 10px;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu a {
+                margin: 10px 0;
+                font-size: 1.2rem;
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 15px 0;
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-menu a:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+
+            /* Only apply these styles to the mobile auth-links */
+            .mobile-auth-links {
+                display: flex;
+                position: absolute;
+                bottom: 40px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                z-index: 91;
+            }
+
+            .mobile-auth-links a, .mobile-auth-links span {
+                margin: 5px 0;
+            }
+            
+            /* Hide desktop auth-links in mobile view */
+            .desktop-auth-links {
+                display: none;
+            }
+        }
+
+        /* Desktop auth-links styling (default) */
+        .desktop-auth-links {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Hide mobile auth-links in desktop view */
+        .mobile-auth-links {
+            display: none;
+        }
+
+        nav a {
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            transition: all 0.3s ease-in-out;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            background: white;
+            color: #1a233a;
+            border-color: white;
+        }
+
+        main {
+            padding: 3em 1em;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+        }
+
+        .contact-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5em;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .contact-header h2 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .contact-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5em;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5em;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1em;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .contact-info {
+            margin-top: 2em;
+            padding-top: 2em;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .contact-info p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0.5em 0;
+        }
+
+        .contact-info a {
+            color: #4CAF50;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-overlay"></div>
+    <nav>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.php">Home</a>
+            <a href="about.php">About</a>
+            <a href="contact.php">Contact</a>
+            <a href="news.php">News</a>
+            <a href="shop.php">Shop</a>
+            <a href="inventory.php">Inventory</a>
+            
+            <!-- Auth links inside mobile menu -->
+            <div class="mobile-auth-links">
+                <?php if (isset($_SESSION['username'])): ?>
+                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                    <a href="logout.php">Logout</a>
+                <?php else: ?>
+                    <a href="register.php">Register</a>
+                    <a href="login.php">Login</a>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+        <!-- Auth links for desktop view -->
+        <div class="desktop-auth-links">
+            <?php if (isset($_SESSION['username'])): ?>
+                <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="register.php">Register</a>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
+    </nav>
+
+    <main>
+        <div class="contact-container">
+            <div class="contact-header">
+                <h2>Contact Us</h2>
+                <p>Have questions or feedback? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            </div>
+
+            <form class="contact-form" action="submit_contact.php" method="POST">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+
+            <div class="contact-info">
+                <p>You can also reach us at:</p>
+                <p><a href="mailto:support@dreamscape.com">support@dreamscape.com</a></p>
+                <p>Discord: <a href="#">Dreamscape Community</a></p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<?php
+// List of all pages to update
+$pages = [
+    'index.php',
+    'about.php',
+    'contact.php',
+    'news.php',
+    'shop.php',
+    'login.php',
+    'register.php',
+    'survival.php',
+    'skyblock.php',
+    'skywars.php',
+    'bedwars.php',
+    'luckyblockbedwars.php',
+    'purchase.php',
+    'validate_purchase.php',
+    'process_payment.php',
+    'payment.php'
+];
+
+// The template content
+$template = file_get_contents('hamburger_template.txt');
+
+// Process each page
+foreach ($pages as $page) {
+    if (!file_exists($page)) {
+        echo "Skipping $page - file does not exist\n";
+        continue;
+    }
+
+    // Read the current page content
+    $content = file_get_contents($page);
+
+    // Check if the hamburger menu is already in the file
+    if (strpos($content, 'class="hamburger"') !== false) {
+        echo "Skipping $page - already has hamburger menu\n";
+        continue;
+    }
+
+    // Look for the head closing tag and the body opening tag
+    $headPos = strpos($content, '</head>');
+    $bodyPos = strpos($content, '<body>');
+
+    if ($headPos === false || $bodyPos === false) {
+        echo "Skipping $page - cannot find head or body tags\n";
+        continue;
+    }
+
+    // Extract parts
+    $scriptAndStyle = substr($template, 0, strpos($template, '<!-- HAMBURGER MENU HTML -->'));
+    $html = substr($template, strpos($template, '<!-- HAMBURGER MENU HTML -->') + strlen('<!-- HAMBURGER MENU HTML -->'));
+
+    // Insert the script and style in the head
+    $content = substr_replace($content, $scriptAndStyle, $headPos, 0);
+    
+    // Adjust bodyPos after inserting script and style
+    $bodyPos = strpos($content, '<body>');
+    
+    // Insert the HTML right after body tag
+    $content = substr_replace($content, $html, $bodyPos + strlen('<body>'), 0);
+
+    // Write back the updated content
+    file_put_contents($page, $content);
+    echo "Updated $page successfully\n";
+}
+
+echo "Finished updating pages\n"; 

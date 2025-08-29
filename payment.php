@@ -1,0 +1,519 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$conn = new mysqli('localhost', 'root', '', 'dreamscape');
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check for existing active subscription
+if (isset($_GET['item'])) {
+    $stmt = $conn->prepare("SELECT item FROM purchases WHERE username = ? AND item = ? AND status = 'active'");
+    $stmt->bind_param('ss', $_SESSION['username'], $_GET['item']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $existingItem = $result->fetch_assoc()['item'];
+        $_SESSION['error'] = "You already have an active " . htmlspecialchars($existingItem) . " subscription.";
+        header("Location: shop.php");
+        exit;
+    }
+    $stmt->close();
+}
+
+$item = $_GET['item'] ?? '';
+$username = $_GET['username'] ?? '';
+
+if (empty($item) || empty($username)) {
+    header("Location: shop.php");
+    exit;
+}
+
+$prices = [
+    'VIP' => 1.00,
+    'Premium' => 5.00,
+    'Ultimate' => 20.00
+];
+
+$price = $prices[$item] ?? 0.00;
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - <?php echo htmlspecialchars($item); ?></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            const body = document.body;
+            const overlay = document.querySelector('.menu-overlay');
+            
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+                body.classList.toggle('menu-open');
+            });
+            
+            // Close menu when clicking on the overlay
+            overlay.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+
+            // Card number formatting
+            const cardNumber = document.getElementById('card_number');
+            cardNumber.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(.{4})/g, '$1 ').trim();
+                e.target.value = value;
+            });
+
+            // Expiry date formatting
+            const expiry = document.getElementById('expiry');
+            expiry.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.slice(0,2) + '/' + value.slice(2,4);
+                }
+                e.target.value = value;
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #1a233a, #4a5673);
+            background-size: 400% 400%;
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Prevent scrolling when menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Create overlay for mobile menu */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 89;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        body.menu-open .menu-overlay {
+            display: block;
+            opacity: 1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em 2em;
+            background: transparent;
+            position: relative;
+            z-index: 100;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger Menu Styling */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 200;
+            position: relative;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger animation */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: flex;
+                margin-right: 15px;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -66.67%;
+                top: 0;
+                flex-direction: column;
+                background-color: rgba(26, 35, 58, 0.95);
+                width: 66.67%;
+                height: 100vh;
+                z-index: 90;
+                text-align: center;
+                justify-content: flex-start;
+                transition: 0.3s;
+                padding-top: 60px;
+                box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu a {
+                margin: 10px 0;
+                font-size: 1.2rem;
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 15px 0;
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-menu a:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            /* Mobile welcome text specific styling */
+            .mobile-auth-links span {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+                padding: 0 10px;
+            }
+            
+            /* Only apply these styles to the mobile auth-links */
+            .mobile-auth-links {
+                display: flex;
+                position: absolute;
+                bottom: 40px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                z-index: 91;
+                padding: 0 15px;
+            }
+
+            .mobile-auth-links a, .mobile-auth-links span {
+                margin: 5px 0;
+            }
+            
+            /* Hide desktop auth-links in mobile view */
+            .desktop-auth-links {
+                display: none;
+            }
+        }
+
+        /* Desktop auth-links styling (default) */
+        .desktop-auth-links {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Hide mobile auth-links in desktop view */
+        .mobile-auth-links {
+            display: none;
+        }
+
+        nav a {
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            transition: all 0.3s ease-in-out;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            background: white;
+            color: #1a233a;
+            border-color: white;
+        }
+
+        main {
+            padding: 3em 1em;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+        }
+
+        .payment-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5em;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .payment-header h2 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+            color: #fff;
+        }
+
+        .payment-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+        }
+
+        .order-summary {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5em;
+            border-radius: 15px;
+            margin-bottom: 2em;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5em 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5em;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5em;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1em;
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1em;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5em;
+            margin-top: 1.5em;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+        }
+
+        .secure-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-overlay"></div>
+    <nav>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.php">Home</a>
+            <a href="about.php">About</a>
+            <a href="contact.php">Contact</a>
+            <a href="news.php">News</a>
+            <a href="shop.php">Shop</a>
+            <a href="inventory.php">Inventory</a>
+            
+            <!-- Auth links inside mobile menu -->
+            <div class="mobile-auth-links">
+                <?php if (isset($_SESSION['username'])): ?>
+                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                    <a href="logout.php">Logout</a>
+                <?php else: ?>
+                    <a href="register.php">Register</a>
+                    <a href="login.php">Login</a>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+        <!-- Auth links for desktop view -->
+        <div class="desktop-auth-links">
+            <?php if (isset($_SESSION['username'])): ?>
+                <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="register.php">Register</a>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
+    </nav>
+
+    <main>
+        <div class="payment-container">
+            <div class="payment-header">
+                <h2>Complete Payment</h2>
+                <p>Enter your payment details to complete the purchase</p>
+            </div>
+
+            <div class="order-summary">
+                <div class="summary-item">
+                    <span>Item:</span>
+                    <span><?php echo htmlspecialchars($item); ?></span>
+                </div>
+                <div class="summary-item">
+                    <span>Username:</span>
+                    <span><?php echo htmlspecialchars($username); ?></span>
+                </div>
+                <div class="summary-item">
+                    <span>Price:</span>
+                    <span>€<?php echo number_format($price, 2); ?></span>
+                </div>
+            </div>
+
+            <form class="payment-form" action="process_payment.php" method="POST">
+                <input type="hidden" name="item" value="<?php echo htmlspecialchars($item); ?>">
+                <input type="hidden" name="username" value="<?php echo htmlspecialchars($username); ?>">
+                
+                <div class="form-group">
+                    <label for="card_holder">Cardholder Name</label>
+                    <input type="text" id="card_holder" name="card_holder" placeholder="Name on card" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="card_number">Card Number</label>
+                    <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                </div>
+                
+                <div class="card-details">
+                    <div class="form-group">
+                        <label for="expiry">Expiry Date</label>
+                        <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="3" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Pay €<?php echo number_format($price, 2); ?></button>
+            </form>
+
+            <div class="secure-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.5 1.1 2.5 2.5V13c.6 0 1 .4 1 1v4c0 .6-.4 1-1 1h-5c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1V9.5C9.5 8.1 10.6 7 12 7zm0 2c-.3 0-.5.2-.5.5V13h1V9.5c0-.3-.2-.5-.5-.5z"/>
+                </svg>
+                Secure Payment
+            </div>
+        </div>
+    </main>
+</body>
+</html>

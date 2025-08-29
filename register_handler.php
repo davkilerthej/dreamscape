@@ -1,0 +1,65 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve form data
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Validate email length (max 191 characters)
+    if (strlen($email) > 191) {
+        header("Location: register.php?error=Email address is too long");
+        exit;
+    }
+
+    // Hash the password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Connect to the database
+    $conn = new mysqli('localhost', 'root', '', 'dreamscape');
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Check if the username already exists
+    $checkUsernameStmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    $checkUsernameStmt->bind_param('s', $username);
+    $checkUsernameStmt->execute();
+    $checkUsernameStmt->store_result();
+
+    // Redirect if username is taken
+    if ($checkUsernameStmt->num_rows > 0) {
+        header("Location: register.php?error=Username already taken");
+        exit;
+    }
+
+    $checkUsernameStmt->close();
+
+    // Check if the email already exists
+    $checkEmailStmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $checkEmailStmt->bind_param('s', $email);
+    $checkEmailStmt->execute();
+    $checkEmailStmt->store_result();
+
+    // Redirect if email is taken
+    if ($checkEmailStmt->num_rows > 0) {
+        header("Location: register.php?error=Email already taken");
+        exit;
+    }
+
+    $checkEmailStmt->close();
+
+    // Insert the new user into the database
+    $insertStmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+    $insertStmt->bind_param('sss', $username, $email, $hashedPassword);
+
+    if ($insertStmt->execute()) {
+        header("Location: login.php");
+        exit;
+    } else {
+        echo "Error: " . $insertStmt->error;
+    }
+
+    $insertStmt->close();
+    $conn->close();
+}
+?>
