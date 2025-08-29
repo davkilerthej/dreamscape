@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
+    header("Location: login");
     exit;
 }
 
@@ -24,7 +24,7 @@ if ($stmt->num_rows === 0) {
     $error = "Minecraft username not found. Please check your username.";
 } else {
     // Redirect to payment page
-    header("Location: payment.php?item=" . urlencode($item) . "&username=" . urlencode($minecraftUsername));
+    header("Location: payment?item=" . urlencode($item) . "&username=" . urlencode($minecraftUsername));
     exit;
 }
 
@@ -344,21 +344,21 @@ $conn->close();
             <span></span>
         </div>
         <div class="nav-menu">
-            <a href="index.php">Home</a>
-            <a href="about.php">About</a>
-            <a href="contact.php">Contact</a>
-            <a href="news.php">News</a>
-            <a href="shop.php">Shop</a>
-            <a href="inventory.php">Inventory</a>
+            <a href="index">Home</a>
+            <a href="about">About</a>
+            <a href="contact">Contact</a>
+            <a href="news">News</a>
+            <a href="shop">Shop</a>
+            <a href="inventory">Inventory</a>
             
             <!-- Auth links inside mobile menu -->
             <div class="mobile-auth-links">
                 <?php if (isset($_SESSION['username'])): ?>
                     <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                    <a href="logout.php">Logout</a>
+                    <a href="logout">Logout</a>
                 <?php else: ?>
-                    <a href="register.php">Register</a>
-                    <a href="login.php">Login</a>
+                    <a href="register">Register</a>
+                    <a href="login">Login</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -367,10 +367,10 @@ $conn->close();
         <div class="desktop-auth-links">
             <?php if (isset($_SESSION['username'])): ?>
                 <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <a href="logout.php">Logout</a>
+                <a href="logout">Logout</a>
             <?php else: ?>
-                <a href="register.php">Register</a>
-                <a href="login.php">Login</a>
+                <a href="register">Register</a>
+                <a href="login">Login</a>
             <?php endif; ?>
         </div>
     </nav>
@@ -400,7 +400,7 @@ $conn->close();
             </div>
 
             <div class="action-buttons">
-                <a href="shop.php" class="btn btn-secondary">Cancel</a>
+                <a href="shop" class="btn btn-secondary">Cancel</a>
             </div>
         </div>
     </main>

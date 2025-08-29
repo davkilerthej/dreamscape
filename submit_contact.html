@@ -44,14 +44,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Redirect or display a success message
-        header("Location: thank_you.php");
+        header("Location: thank_you");
         exit;
     } catch (PDOException $e) {
         die("Error saving data: " . $e->getMessage());
     }
 } else {
     // Redirect to the form page if accessed directly
-    header("Location: contact.php");
+    header("Location: contact");
     exit;
 }
 ?>

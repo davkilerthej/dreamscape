@@ -335,21 +335,21 @@
             <span></span>
         </div>
         <div class="nav-menu">
-            <a href="index.php">Home</a>
-            <a href="about.php">About</a>
-            <a href="contact.php">Contact</a>
-            <a href="news.php">News</a>
-            <a href="shop.php">Shop</a>
-            <a href="inventory.php">Inventory</a>
+            <a href="index">Home</a>
+            <a href="about">About</a>
+            <a href="contact">Contact</a>
+            <a href="news">News</a>
+            <a href="shop">Shop</a>
+            <a href="inventory">Inventory</a>
             
             <!-- Auth links inside mobile menu -->
             <div class="mobile-auth-links">
                 <?php if (isset($_SESSION['username'])): ?>
                     <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                    <a href="logout.php">Logout</a>
+                    <a href="logout">Logout</a>
                 <?php else: ?>
-                    <a href="register.php">Register</a>
-                    <a href="login.php">Login</a>
+                    <a href="register">Register</a>
+                    <a href="login">Login</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -358,10 +358,10 @@
         <div class="desktop-auth-links">
             <?php if (isset($_SESSION['username'])): ?>
                 <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <a href="logout.php">Logout</a>
+                <a href="logout">Logout</a>
             <?php else: ?>
-                <a href="register.php">Register</a>
-                <a href="login.php">Login</a>
+                <a href="register">Register</a>
+                <a href="login">Login</a>
             <?php endif; ?>
         </div>
     </nav>
@@ -374,7 +374,7 @@
                     <?php echo htmlspecialchars($_GET['error']); ?>
                 </div>
             <?php endif; ?>
-            <form action="login_handler.php" method="POST">
+            <form action="login_handler" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" placeholder="Enter your username" required>
@@ -386,7 +386,7 @@
                 <button type="submit" class="submit-btn">Login</button>
             </form>
             <div class="register-link">
-                Don't have an account? <a href="register.php">Register here</a>
+                Don't have an account? <a href="register">Register here</a>
             </div>
         </div>
     </main>

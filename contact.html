@@ -354,21 +354,21 @@ session_start(); // Start session
             <span></span>
         </div>
         <div class="nav-menu">
-            <a href="index.php">Home</a>
-            <a href="about.php">About</a>
-            <a href="contact.php">Contact</a>
-            <a href="news.php">News</a>
-            <a href="shop.php">Shop</a>
-            <a href="inventory.php">Inventory</a>
+            <a href="index">Home</a>
+            <a href="about">About</a>
+            <a href="contact">Contact</a>
+            <a href="news">News</a>
+            <a href="shop">Shop</a>
+            <a href="inventory">Inventory</a>
             
             <!-- Auth links inside mobile menu -->
             <div class="mobile-auth-links">
                 <?php if (isset($_SESSION['username'])): ?>
                     <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                    <a href="logout.php">Logout</a>
+                    <a href="logout">Logout</a>
                 <?php else: ?>
-                    <a href="register.php">Register</a>
-                    <a href="login.php">Login</a>
+                    <a href="register">Register</a>
+                    <a href="login">Login</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -377,10 +377,10 @@ session_start(); // Start session
         <div class="desktop-auth-links">
             <?php if (isset($_SESSION['username'])): ?>
                 <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <a href="logout.php">Logout</a>
+                <a href="logout">Logout</a>
             <?php else: ?>
-                <a href="register.php">Register</a>
-                <a href="login.php">Login</a>
+                <a href="register">Register</a>
+                <a href="login">Login</a>
             <?php endif; ?>
         </div>
     </nav>
@@ -392,7 +392,7 @@ session_start(); // Start session
                 <p>Have questions or feedback? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
             </div>
 
-            <form class="contact-form" action="submit_contact.php" method="POST">
+            <form class="contact-form" action="submit_contact" method="POST">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required>

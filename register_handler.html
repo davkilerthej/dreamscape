@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validate email length (max 191 characters)
     if (strlen($email) > 191) {
-        header("Location: register.php?error=Email address is too long");
+        header("Location: register?error=Email address is too long");
         exit;
     }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Redirect if username is taken
     if ($checkUsernameStmt->num_rows > 0) {
-        header("Location: register.php?error=Username already taken");
+        header("Location: register?error=Username already taken");
         exit;
     }
 
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Redirect if email is taken
     if ($checkEmailStmt->num_rows > 0) {
-        header("Location: register.php?error=Email already taken");
+        header("Location: register?error=Email already taken");
         exit;
     }
 
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $insertStmt->bind_param('sss', $username, $email, $hashedPassword);
 
     if ($insertStmt->execute()) {
-        header("Location: login.php");
+        header("Location: login");
         exit;
     } else {
         echo "Error: " . $insertStmt->error;

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
+    header("Location: login");
     exit;
 }
 
@@ -534,21 +534,21 @@ $conn->close();
             <span></span>
         </div>
         <div class="nav-menu">
-            <a href="index.php">Home</a>
-            <a href="about.php">About</a>
-            <a href="contact.php">Contact</a>
-            <a href="news.php">News</a>
-            <a href="shop.php">Shop</a>
-            <a href="inventory.php">Inventory</a>
+            <a href="index">Home</a>
+            <a href="about">About</a>
+            <a href="contact">Contact</a>
+            <a href="news">News</a>
+            <a href="shop">Shop</a>
+            <a href="inventory">Inventory</a>
             
             <!-- Auth links inside mobile menu -->
             <div class="mobile-auth-links">
                 <?php if (isset($_SESSION['username'])): ?>
                     <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                    <a href="logout.php">Logout</a>
+                    <a href="logout">Logout</a>
                 <?php else: ?>
-                    <a href="register.php">Register</a>
-                    <a href="login.php">Login</a>
+                    <a href="register">Register</a>
+                    <a href="login">Login</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -557,10 +557,10 @@ $conn->close();
         <div class="desktop-auth-links">
             <?php if (isset($_SESSION['username'])): ?>
                 <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <a href="logout.php">Logout</a>
+                <a href="logout">Logout</a>
             <?php else: ?>
-                <a href="register.php">Register</a>
-                <a href="login.php">Login</a>
+                <a href="register">Register</a>
+                <a href="login">Login</a>
             <?php endif; ?>
         </div>
     </nav>
@@ -602,7 +602,7 @@ $conn->close();
             <div class="empty-inventory">
                 <h2>No Items Found</h2>
                 <p>Your inventory is empty. Visit our shop to get started with some amazing items!</p>
-                <a href="shop.php" class="shop-link">Visit Shop</a>
+                <a href="shop" class="shop-link">Visit Shop</a>
             </div>
         <?php else: ?>
             <div class="purchases-grid">
@@ -638,7 +638,7 @@ $conn->close();
                             <?php echo htmlspecialchars($statusText); ?>
                         </div>
                         <?php if (isset($purchase['status']) && strtolower($purchase['status']) === 'active'): ?>
-                            <form class="refund-form" action="cancel_purchase.php" method="POST">
+                            <form class="refund-form" action="cancel_purchase" method="POST">
                                 <input type="hidden" name="item" value="<?php echo htmlspecialchars($purchase['item']); ?>">
                                 <div class="form-group">
                                     <label for="password">Enter your password to confirm refund:</label>
@@ -647,7 +647,7 @@ $conn->close();
                                 <button type="submit" class="refund-btn">Request Refund</button>
                             </form>
                         <?php elseif (isset($purchase['status']) && strtolower($purchase['status']) === 'refunded' && !$purchase['hidden']): ?>
-                            <form action="hide_purchase.php" method="POST">
+                            <form action="hide_purchase" method="POST">
                                 <input type="hidden" name="purchase_id" value="<?php echo htmlspecialchars($purchase['id']); ?>">
                                 <button type="submit" class="remove-btn">Remove from Inventory</button>
                             </form>
