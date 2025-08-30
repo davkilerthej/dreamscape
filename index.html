@@ -1,415 +1,159 @@
-<?php
-session_start(); // Start session
-?>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dreamscape - About</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.querySelector('.hamburger');
-            const navMenu = document.querySelector('.nav-menu');
-            const body = document.body;
-            const overlay = document.querySelector('.menu-overlay');
-            
-            hamburger.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                hamburger.classList.toggle('active');
-                body.classList.toggle('menu-open');
-            });
-            
-            // Close menu when clicking on the overlay
-            overlay.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-                body.classList.remove('menu-open');
-            });
-        });
-    </script>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(120deg, #1a233a, #4a5673);
-            background-size: 400% 400%;
-            color: white;
-            line-height: 1.6;
-        }
-
-        /* Prevent scrolling when menu is open */
-        body.menu-open {
-            overflow: hidden;
-        }
-
-        /* Create overlay for mobile menu */
-        .menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 89;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        body.menu-open .menu-overlay {
-            display: block;
-            opacity: 1;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1em 2em;
-            background: transparent;
-            position: relative;
-            z-index: 100;
-        }
-
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* Hamburger Menu Styling */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            cursor: pointer;
-            z-index: 200;
-            position: relative;
-        }
-
-        .hamburger span {
-            display: block;
-            height: 3px;
-            width: 100%;
-            background-color: white;
-            border-radius: 3px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* Hamburger animation */
-        .hamburger.active span:nth-child(1) {
-            transform: translateY(9px) rotate(45deg);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: translateY(-9px) rotate(-45deg);
-        }
-
-        /* Responsive styles */
-        @media screen and (max-width: 768px) {
-            .hamburger {
-                display: flex;
-                margin-right: 15px;
-            }
-
-            .nav-menu {
-                position: fixed;
-                left: -66.67%;
-                top: 0;
-                flex-direction: column;
-                background-color: rgba(26, 35, 58, 0.95);
-                width: 66.67%;
-                height: 100vh;
-                z-index: 90;
-                text-align: center;
-                justify-content: flex-start;
-                transition: 0.3s;
-                padding-top: 60px;
-                box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
-                border-right: 1px solid rgba(255, 255, 255, 0.1);
-            }
-            
-            .nav-menu.active {
-                left: 0;
-            }
-
-            .nav-menu a {
-                margin: 10px 0;
-                font-size: 1.2rem;
-                display: block;
-                width: 100%;
-                text-align: center;
-                padding: 15px 0;
-                border-radius: 0;
-                border: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .nav-menu a:hover {
-                background: rgba(255, 255, 255, 0.1);
-                color: white;
-                border-color: rgba(255, 255, 255, 0.1);
-            }
-            
-            /* Mobile welcome text specific styling */
-            .mobile-auth-links span {
-                display: block;
-                width: 100%;
-                text-align: center;
-                margin-bottom: 10px;
-                padding: 0 10px;
-            }
-            
-            /* Only apply these styles to the mobile auth-links */
-            .mobile-auth-links {
-                display: flex;
-                position: absolute;
-                bottom: 40px;
-                left: 0;
-                width: 100%;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                z-index: 91;
-                padding: 0 15px;
-            }
-            
-            .mobile-auth-links a, .mobile-auth-links span {
-                margin: 5px 0;
-            }
-            
-            /* Hide desktop auth-links in mobile view */
-            .desktop-auth-links {
-                display: none;
-            }
-        }
-
-        /* Desktop auth-links styling (default) */
-        .desktop-auth-links {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Hide mobile auth-links in desktop view */
-        .mobile-auth-links {
-            display: none;
-        }
-
-        nav a {
-            color: white;
-            padding: 10px 20px;
-            margin: 0 10px;
-            text-decoration: none;
-            border: 2px solid transparent;
-            border-radius: 20px;
-            transition: all 0.3s ease-in-out;
-            font-weight: 600;
-        }
-
-        nav a:hover {
-            background: white;
-            color: #1a233a;
-            border-color: white;
-        }
-
-        .auth-links a {
-            margin: 0 5px;
-        }
-
-        main {
-            padding: 3em 1em;
-            text-align: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        main h2 {
-            font-size: 2em;
-            margin-bottom: 1em;
-            font-weight: 600;
-            width: 100%;
-        }
-
-        main p {
-            font-size: 1.2em;
-            max-width: 800px;
-            margin: 0 auto 2em;
-        }
-
-        #gamemodes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 2em;
-            width: 100%;
-            max-width: 1200px;
-            justify-content: center;
-        }
-
-        .gamemode {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            max-width: 350px;
-            margin: 0 auto;
-        }
-
-        .gamemode:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .gamemode img {
-            width: 100%;
-            max-height: 150px;
-            border-radius: 15px;
-            object-fit: cover;
-        }
-
-        .gamemode h3 {
-            font-size: 1.5em;
-            margin: 10px 0;
-        }
-
-        .gamemode p {
-            font-size: 1em;
-        }
-
-        @media (max-width: 768px) {
-            #gamemodes {
-                grid-template-columns: 1fr;
-            }
-            .gamemode:nth-child(5) {
-                grid-column: 1;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dreamscape</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* small inline tweaks so you get the green counter right away */
+    #server-count { color: #7CFC00; font-size: 1.6rem; font-weight:700; }
+    .auth-btn { cursor:pointer; padding:6px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:transparent; color:white; text-decoration:none; margin-left:8px; }
+  </style>
 </head>
 <body>
-    <div class="menu-overlay"></div>
-    <nav>
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="nav-menu">
-            <a href="index">Home</a>
-            <a href="about">About</a>
-            <a href="contact">Contact</a>
-            <a href="news">News</a>
-            <a href="shop">Shop</a>
-            <a href="inventory">Inventory</a>
-            
-            <!-- Auth links inside mobile menu -->
-            <div class="mobile-auth-links">
-                <?php if (isset($_SESSION['username'])): ?>
-                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                    <a href="logout">Logout</a>
-                <?php else: ?>
-                    <a href="register">Register</a>
-                    <a href="login">Login</a>
-                <?php endif; ?>
-            </div>
-        </div>
-        
-        <!-- Auth links for desktop view -->
-        <div class="desktop-auth-links">
-            <?php if (isset($_SESSION['username'])): ?>
-                <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <a href="logout">Logout</a>
-            <?php else: ?>
-                <a href="register">Register</a>
-                <a href="login">Login</a>
-            <?php endif; ?>
-        </div>
-    </nav>
+  <nav>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+    <div class="nav-menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="news.html">News</a>
+      <a href="shop.html">Shop</a>
+      <a href="inventory.html">Inventory</a>
+    </div>
 
-    <main>
-        <h2>Welcome to Dreamscape</h2>
-        <p>
-            Dreamscape is the ultimate Minecraft server experience where adventure and creativity collide. Join our vibrant community, explore unique gamemodes, and create memories that last a lifetime. Dive in and start your journey today!
-        </p>
-        <div id="gamemodes">
-            <div class="gamemode" onclick="location.href='bedwars';">
-                <img src="images/bedwars.jpg" alt="BedWars">
-                <h3>BedWars</h3>
-                <p>Compete with other teams to destroy their beds and be the last one standing.</p>
-            </div>
+    <div id="auth-area" style="display:flex;align-items:center;">
+      <!-- JS will populate -->
+      <a id="login-btn" class="auth-btn">Login / Register</a>
+      <a id="logout-btn" class="auth-btn" style="display:none;">Logout</a>
+      <span id="welcome" style="margin-left:8px;"></span>
+    </div>
+  </nav>
 
-            <div class="gamemode" onclick="location.href='skywars';">
-                <img src="images/skywars.jpg" alt="SkyWars">
-                <h3>SkyWars</h3>
-                <p>Fight in the sky and be the last player alive. Gather resources, craft weapons, and eliminate your opponents.</p>
-            </div>
+  <main>
+    <h2>Welcome to Dreamscape</h2>
+    <p>Dreamscape is the ultimate Minecraft server experience...</p>
 
-            <div class="gamemode" onclick="location.href='luckyblockbedwars';">
-                <img src="images/luckyblockbedwars.jpg" alt="LuckyBlockBedWars">
-                <h3>LuckyBlock BedWars</h3>
-                <p>Break lucky blocks to get unpredictable items that could change the course of the game.</p>
-            </div>
+    <div id="gamemodes">
+      <!-- your existing gamemode cards -->
+    </div>
 
-            <div class="gamemode" onclick="location.href='skyblock';">
-                <img src="images/skyblock.jpg" alt="SkyBlock">
-                <h3>SkyBlock</h3>
-                <p>Start on a tiny island in the sky. Gather resources, complete challenges, and expand your island.</p>
-            </div>
+    <div style="margin-top:18px; text-align:center;">
+      <strong>Players online: <span id="server-count">—</span></strong>
+      <div id="server-updated" style="font-size:0.9rem; opacity:0.85; margin-top:6px;">Last: —</div>
+    </div>
+  </main>
 
-            <div class="gamemode" onclick="location.href='survival';">
-                <img src="images/survival.jpg" alt="Survival">
-                <h3>Survival</h3>
-                <p>Survive the harsh Minecraft world! Build, mine, craft, and fight to stay alive while exploring Dreamscape.</p>
-            </div>
-        </div>
-    </main>
-      <!-- Add this where you want the count to appear (e.g. inside <main>) -->
-  <div style="margin-top:18px; text-align:center;">
-    <strong>Players online: <span id="server-count" style="color: #7CFC00; font-size: 1.6rem;">—</span></strong>
-    <div id="server-updated" style="font-size:0.9rem; opacity:0.85; margin-top:6px;">Last: —</div>
+  <!-- Simple modal for email login -->
+  <div id="login-modal" style="display:none; position:fixed; left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
+    <div style="background:#172034;padding:20px;border-radius:10px;color:white;min-width:300px;">
+      <h3>Login / Register</h3>
+      <p>Enter your email — we'll send a magic link to sign in.</p>
+      <input id="login-email" type="email" placeholder="you@example.com" style="width:100%; padding:8px; border-radius:6px; border:none; margin-bottom:8px;">
+      <div style="display:flex; justify-content:flex-end;">
+        <button id="login-send" style="padding:8px 12px;border-radius:8px;">Send Link</button>
+        <button id="login-cancel" style="margin-left:8px;padding:8px 12px;border-radius:8px;background:#333;color:white;border:none;">Cancel</button>
+      </div>
+      <div id="login-feedback" style="margin-top:8px;font-size:0.9rem;opacity:0.9;"></div>
+    </div>
   </div>
 
-  <!-- Supabase + live fetch/subscription script (paste before </body>) -->
+  <!-- Supabase + app script -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // ---- REPLACE THESE ----
-    const SUPABASE_URL = 'https://ytjlknmtfwlhqcgszxid.supabase.co';     // from Supabase Settings → API
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0amxrbm10ZndsaHFjZ3N6eGlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1NTQ0MDMsImV4cCI6MjA3MjEzMDQwM30.75uy04cQzIZt3j63TT8oBdPbYngALamU7t4rKMYXoaY';                   // anon/public key (browser)
-    const SERVER_ID = 'dreamscape-main';                          // choose same id in plugin config
-    // ------------------------
+    // ----- REPLACE WITH YOUR VALUES -----
+    const SUPABASE_URL = 'https://ytjlknmtfwlhqcgszxid.supabase.co';
+    const SUPABASE_ANON_KEY = '<YOUR_ANON_KEY_HERE>';
+    const SERVER_ID = 'dreamscape-main';
+    // ------------------------------------
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Update DOM helper
-    function updateDOM(count, last) {
-      const el = document.getElementById('server-count');
-      const t = document.getElementById('server-updated');
-      el.textContent = String(count ?? 0);
-      // green color (already inline) — but double check style
-      el.style.color = '#7CFC00';
-      t.textContent = 'Last: ' + (last ? new Date(last).toLocaleString() : '—');
+    // UI elems
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const welcome = document.getElementById('welcome');
+    const loginModal = document.getElementById('login-modal');
+    const loginCancel = document.getElementById('login-cancel');
+    const loginSend = document.getElementById('login-send');
+    const loginEmail = document.getElementById('login-email');
+    const loginFeedback = document.getElementById('login-feedback');
+    const serverCountEl = document.getElementById('server-count');
+    const serverUpdatedEl = document.getElementById('server-updated');
+
+    // Show/hide auth UI
+    function showLoggedOutUI() {
+      loginBtn.style.display = 'inline-block';
+      logoutBtn.style.display = 'none';
+      welcome.textContent = '';
+    }
+    function showLoggedInUI(user) {
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'inline-block';
+      const displayName = user.user_metadata?.full_name || user.email || user.id;
+      welcome.textContent = `Welcome, ${displayName}`;
     }
 
-    // Poll fallback (every 15s)
+    // Auth functions
+    loginBtn.addEventListener('click', () => loginModal.style.display = 'flex');
+    loginCancel.addEventListener('click', () => {
+      loginModal.style.display = 'none';
+      loginFeedback.textContent = '';
+    });
+
+    loginSend.addEventListener('click', async () => {
+      const email = loginEmail.value && loginEmail.value.trim();
+      if (!email) { loginFeedback.textContent = 'Enter a valid email.'; return; }
+      loginFeedback.textContent = 'Sending link…';
+
+      // magic link sign-in
+      const { error } = await supabase.auth.signInWithOtp({ email });
+      if (error) {
+        loginFeedback.textContent = 'Error: ' + error.message;
+      } else {
+        loginFeedback.textContent = 'Check your inbox for the magic link.';
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      // UI will update via onAuthStateChange
+    });
+
+    // React to auth changes
+    supabase.auth.onAuthStateChange((event, session) => {
+      // session may be null (signed out)
+      (async () => {
+        if (session?.user) {
+          // fetch user object to display metadata
+          const user = session.user;
+          showLoggedInUI(user);
+        } else {
+          showLoggedOutUI();
+        }
+      })();
+    });
+
+    // initialize auth state on page load
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data?.session?.user) {
+        showLoggedInUI(data.session.user);
+      } else {
+        showLoggedOutUI();
+      }
+    })();
+
+    // --- Player count fetching & realtime ---
+    async function updateDOM(count, last) {
+      serverCountEl.textContent = String(count ?? 0);
+      serverCountEl.style.color = '#7CFC00';
+      serverUpdatedEl.textContent = 'Last: ' + (last ? new Date(last).toLocaleString() : '—');
+    }
+
     async function loadCount() {
       try {
         const { data, error } = await supabase
@@ -428,32 +172,26 @@ session_start(); // Start session
       }
     }
 
-    // Realtime subscription (fast UI updates)
     function subscribe() {
-      // create a realtime channel and listen to updates for this server_id
       const channel = supabase.channel('public:server_stats')
         .on('postgres_changes',
             { event: 'UPDATE', schema: 'public', table: 'server_stats', filter: `server_id=eq.${SERVER_ID}` },
             (payload) => {
-              // payload.new contains updated row
               const row = payload.new ?? payload;
               updateDOM(row.online_count, row.last_updated);
             })
         .subscribe((status) => {
-          // status: subscribing, connected, etc.
           console.debug('Realtime status', status);
         });
 
-      // Keep reference to channel so it can be removed if needed
+      // keep ref
       window.__supabase_server_channel = channel;
     }
 
-    // initialize
+    // init
     loadCount();
-    setInterval(loadCount, 15000); // poll as fallback
+    setInterval(loadCount, 15000);
     subscribe();
   </script>
-    
 </body>
 </html>
-
