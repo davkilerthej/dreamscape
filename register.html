@@ -302,10 +302,13 @@
                 flex-direction: column;
                 align-items: center;
                 z-index: 91;
+                gap: 0.75rem;
             }
 
             .mobile-auth-links a, .mobile-auth-links span {
-                margin: 5px 0;
+                margin: 0;
+                width: 80%;
+                max-width: 200px;
             }
             
             /* Hide desktop auth-links in mobile view */
@@ -344,37 +347,22 @@
             
             <!-- Auth links inside mobile menu -->
             <div class="mobile-auth-links">
-                <?php if (isset($_SESSION['username'])): ?>
-                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                    <a href="logout">Logout</a>
-                <?php else: ?>
-                    <a href="register">Register</a>
-                    <a href="login">Login</a>
-                <?php endif; ?>
+                <a href="register" class="auth-btn register-btn">Register</a>
+                <a href="login" class="auth-btn login-btn">Login</a>
             </div>
         </div>
-        
+
         <!-- Auth links for desktop view -->
         <div class="desktop-auth-links">
-            <?php if (isset($_SESSION['username'])): ?>
-                <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <a href="logout">Logout</a>
-            <?php else: ?>
-                <a href="register">Register</a>
-                <a href="login">Login</a>
-            <?php endif; ?>
+            <a href="register" class="auth-btn register-btn">Register</a>
+            <a href="login" class="auth-btn login-btn">Login</a>
         </div>
     </nav>
 
     <main>
         <div class="register-container">
             <h2>Create Account</h2>
-            <?php if (isset($_GET['error'])): ?>
-                <div class="error-message">
-                    <?php echo htmlspecialchars($_GET['error']); ?>
-                </div>
-            <?php endif; ?>
-            <form action="register_handler" method="POST">
+            <form action="#" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" placeholder="Choose a username" required>

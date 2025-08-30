@@ -26,6 +26,62 @@
                 body.classList.remove('menu-open');
             });
         });
+
+        // Function to copy server IP to clipboard
+        function copyServerIP() {
+            const serverIP = 'dreamscape.cloudns.be';
+            navigator.clipboard.writeText(serverIP).then(() => {
+                // Show success message
+                showNotification('Server IP copied to clipboard: ' + serverIP, 'success');
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = serverIP;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Server IP copied to clipboard: ' + serverIP, 'success');
+            });
+        }
+
+        // Function to show notifications
+        function showNotification(message, type) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+
+            // Style the notification
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.background = type === 'success' ? '#4CAF50' : '#f44336';
+            notification.style.color = 'white';
+            notification.style.padding = '12px 24px';
+            notification.style.borderRadius = '8px';
+            notification.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+            notification.style.zIndex = '10000';
+            notification.style.fontWeight = '500';
+            notification.style.animation = 'slideInRight 0.3s ease';
+
+            // Add to page
+            document.body.appendChild(notification);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
     </script>
     <style>
         body {
@@ -135,10 +191,13 @@
                 flex-direction: column;
                 align-items: center;
                 z-index: 91;
+                gap: 0.75rem;
             }
 
             .mobile-auth-links a, .mobile-auth-links span {
-                margin: 5px 0;
+                margin: 0;
+                width: 80%;
+                max-width: 200px;
             }
             
             /* Hide desktop auth-links in mobile view */
@@ -285,7 +344,7 @@
             <p>Server IP: <strong>dreamscape.cloudns.be</strong></p>
             <p>Status: <span style="color: #4CAF50;">Online</span></p>
             <p>Type: Free-to-Play</p>
-            <a href="#" class="join-button">Join Now</a>
+            <button class="join-button" onclick="copyServerIP()">Join Now</button>
         </div>
     </main>
 </body>

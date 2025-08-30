@@ -642,14 +642,25 @@
     function handleScrollAnimations() {
         const elements = document.querySelectorAll('.feature-card, .stat-item, .gamemode');
 
+        // Use passive listeners for better performance
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '50px 0px'
+        };
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    // Use requestAnimationFrame for smoother animations
+                    requestAnimationFrame(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    });
+                    // Stop observing once animated
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1 });
+        }, observerOptions);
 
         elements.forEach(element => {
             element.style.opacity = '0';
