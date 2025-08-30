@@ -3,176 +3,330 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dreamscape</title>
+  <title>Dreamscape - About</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+
   <style>
-    /* small inline tweaks so you get the green counter right away */
-    #server-count { color: #7CFC00; font-size: 1.6rem; font-weight:700; }
-    .auth-btn { cursor:pointer; padding:6px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:transparent; color:white; text-decoration:none; margin-left:8px; }
+    :root{
+      --bg-a:#1a233a;
+      --bg-b:#4a5673;
+      --panel: rgba(255,255,255,0.08);
+      --accent-green: #7CFC00;
+      --text: #ffffff;
+      --nav-height: 72px;
+    }
+
+    /* Page base */
+    html,body{height:100%;margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(120deg,var(--bg-a),var(--bg-b));color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+
+    /* NAV */
+    nav{display:flex;align-items:center;justify-content:space-between;padding:1em 2em;position:relative;z-index:100}
+    .nav-left, .nav-right{display:flex;align-items:center;gap:8px}
+    .nav-menu{display:flex;gap:6px;align-items:center}
+    .nav-menu a{
+      color:var(--text);
+      padding:10px 18px;
+      margin:0 6px;
+      text-decoration:none;
+      border:2px solid transparent;
+      border-radius:20px;
+      transition:all .18s ease;
+      font-weight:600;
+      display:inline-block;
+    }
+    /* Green-outline button style you asked for */
+    .nav-menu a.outline{
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(124,252,0,0.03);
+    }
+    .nav-menu a:hover{background:rgba(255,255,255,0.08);color:var(--bg-a);border-color:rgba(255,255,255,0.12);}
+
+    /* Auth area */
+    .auth-links{display:flex;align-items:center;gap:8px}
+    .auth-btn{background:transparent;border:2px solid rgba(255,255,255,0.08);padding:6px 10px;border-radius:10px;color:var(--text);cursor:pointer}
+    .auth-btn.primary{border-color:var(--accent-green)}
+    .welcome{font-weight:600;opacity:0.95}
+
+    /* Hamburger / mobile menu */
+    .hamburger{display:none;flex-direction:column;justify-content:space-between;width:30px;height:21px;cursor:pointer}
+    .hamburger span{display:block;height:3px;width:100%;background-color:var(--text);border-radius:3px}
+    .menu-overlay{display:none;position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:89;opacity:0;transition:opacity .25s}
+    body.menu-open .menu-overlay{display:block;opacity:1}
+
+    /* Responsive menu */
+    @media screen and (max-width:768px){
+      .hamburger{display:flex}
+      .nav-menu{position:fixed;left:-66.67%;top:0;flex-direction:column;background-color:rgba(26,35,58,0.95);width:66.67%;height:100vh;z-index:90;text-align:center;justify-content:flex-start;padding-top:60px;transition:left .25s;box-shadow:3px 0 15px rgba(0,0,0,0.3);border-right:1px solid rgba(255,255,255,0.06)}
+      .nav-menu.active{left:0}
+      .nav-menu a{display:block;width:100%;margin:8px 0;border-radius:0;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+      .desktop-auth-links{display:none}
+      .mobile-auth-links{display:flex;position:absolute;bottom:40px;left:0;width:100%;flex-direction:column;align-items:center;padding:0 15px;gap:8px}
+    }
+    /* Desktop */
+    .mobile-auth-links{display:none}
+    .desktop-auth-links{display:flex;gap:8px;align-items:center}
+
+    /* Main content */
+    main{padding:3em 1em;text-align:center;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+    main h2{font-size:2em;margin-bottom:1em;font-weight:600;width:100%}
+    main p{font-size:1.15em;max-width:800px;margin:0 auto 2em;opacity:0.95}
+
+    #gamemodes{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:2em;width:100%;max-width:1200px;justify-content:center}
+    .gamemode{background:rgba(255,255,255,0.06);padding:20px;border-radius:15px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;transition:transform .3s ease,box-shadow .3s ease;cursor:pointer;max-width:350px;margin:0 auto}
+    .gamemode:hover{transform:translateY(-10px);box-shadow:0 10px 20px rgba(0,0,0,0.35)}
+    .gamemode img{width:100%;max-height:150px;border-radius:15px;object-fit:cover}
+    .gamemode h3{font-size:1.5em;margin:10px 0}
+    .gamemode p{font-size:1em}
+
+    /* player count block */
+    .server-block{margin-top:18px;text-align:center}
+    #server-count{color:var(--accent-green);font-size:1.6rem;font-weight:700}
+    #server-updated{font-size:0.9rem;opacity:0.85;margin-top:6px}
+
+    /* utility */
+    .hidden{display:none!important}
   </style>
 </head>
 <body>
+  <div class="menu-overlay"></div>
+
   <nav>
-    <div class="hamburger"><span></span><span></span><span></span></div>
-    <div class="nav-menu">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="news.html">News</a>
-      <a href="shop.html">Shop</a>
-      <a href="inventory.html">Inventory</a>
+    <div class="nav-left" style="display:flex;align-items:center;gap:12px">
+      <div class="hamburger" aria-label="menu" role="button" title="menu">
+        <span></span><span></span><span></span>
+      </div>
+
+      <div class="nav-menu" role="navigation" aria-label="main navigation">
+        <!-- Nav links: I've added the "outline" class to highlight them with green outline -->
+        <a class="outline" href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="news.html">News</a>
+        <a href="shop.html">Shop</a>
+        <a href="inventory.html">Inventory</a>
+
+        <!-- Mobile auth links show in mobile menu -->
+        <div class="mobile-auth-links" id="mobile-auth-links" style="display:none">
+          <!-- JS fills these -->
+        </div>
+      </div>
     </div>
 
-    <div id="auth-area" style="display:flex;align-items:center;">
-      <!-- JS will populate -->
-      <a id="login-btn" class="auth-btn">Login / Register</a>
-      <a id="logout-btn" class="auth-btn" style="display:none;">Logout</a>
-      <span id="welcome" style="margin-left:8px;"></span>
+    <!-- Desktop auth links area (JS will render login/register or welcome+logout) -->
+    <div class="desktop-auth-links nav-right" id="desktop-auth-links">
+      <!-- JS will inject auth UI here -->
     </div>
   </nav>
 
   <main>
     <h2>Welcome to Dreamscape</h2>
-    <p>Dreamscape is the ultimate Minecraft server experience...</p>
+    <p>Dreamscape is the ultimate Minecraft server experience where adventure and creativity collide. Join our vibrant community, explore unique gamemodes, and create memories that last a lifetime. Dive in and start your journey today!</p>
 
     <div id="gamemodes">
-      <!-- your existing gamemode cards -->
+      <div class="gamemode" onclick="location.href='bedwars.html'">
+        <img src="images/bedwars.jpg" alt="BedWars">
+        <h3>BedWars</h3>
+        <p>Compete with other teams to destroy their beds and be the last one standing.</p>
+      </div>
+
+      <div class="gamemode" onclick="location.href='skywars.html'">
+        <img src="images/skywars.jpg" alt="SkyWars">
+        <h3>SkyWars</h3>
+        <p>Fight in the sky and be the last player alive. Gather resources, craft weapons, and eliminate your opponents.</p>
+      </div>
+
+      <div class="gamemode" onclick="location.href='luckyblockbedwars.html'">
+        <img src="images/luckyblockbedwars.jpg" alt="LuckyBlockBedWars">
+        <h3>LuckyBlock BedWars</h3>
+        <p>Break lucky blocks to get unpredictable items that could change the course of the game.</p>
+      </div>
+
+      <div class="gamemode" onclick="location.href='skyblock.html'">
+        <img src="images/skyblock.jpg" alt="SkyBlock">
+        <h3>SkyBlock</h3>
+        <p>Start on a tiny island in the sky. Gather resources, complete challenges, and expand your island.</p>
+      </div>
+
+      <div class="gamemode" onclick="location.href='survival.html'">
+        <img src="images/survival.jpg" alt="Survival">
+        <h3>Survival</h3>
+        <p>Survive the harsh Minecraft world! Build, mine, craft, and fight to stay alive while exploring Dreamscape.</p>
+      </div>
     </div>
 
-    <div style="margin-top:18px; text-align:center;">
+    <div class="server-block" aria-live="polite">
       <strong>Players online: <span id="server-count">—</span></strong>
-      <div id="server-updated" style="font-size:0.9rem; opacity:0.85; margin-top:6px;">Last: —</div>
+      <div id="server-updated">Last: —</div>
     </div>
   </main>
 
-  <!-- Simple modal for email login -->
-  <div id="login-modal" style="display:none; position:fixed; left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
-    <div style="background:#172034;padding:20px;border-radius:10px;color:white;min-width:300px;">
-      <h3>Login / Register</h3>
-      <p>Enter your email — we'll send a magic link to sign in.</p>
-      <input id="login-email" type="email" placeholder="you@example.com" style="width:100%; padding:8px; border-radius:6px; border:none; margin-bottom:8px;">
-      <div style="display:flex; justify-content:flex-end;">
-        <button id="login-send" style="padding:8px 12px;border-radius:8px;">Send Link</button>
-        <button id="login-cancel" style="margin-left:8px;padding:8px 12px;border-radius:8px;background:#333;color:white;border:none;">Cancel</button>
+  <!-- Simple login modal (magic link) -->
+  <div id="login-modal" class="hidden" style="position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:200;">
+    <div style="background:#0f1724;padding:18px;border-radius:10px;color:white;min-width:320px">
+      <h3 style="margin:0 0 8px 0">Login / Register</h3>
+      <p style="margin:0 0 12px 0">Enter your email and we'll send a magic link.</p>
+      <input id="login-email" type="email" placeholder="you@example.com" style="width:100%;padding:10px;border-radius:8px;border:none;margin-bottom:10px">
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <button id="login-send" class="auth-btn">Send Link</button>
+        <button id="login-cancel" class="auth-btn">Cancel</button>
       </div>
-      <div id="login-feedback" style="margin-top:8px;font-size:0.9rem;opacity:0.9;"></div>
+      <div id="login-feedback" style="margin-top:10px;font-size:0.9rem;opacity:0.9"></div>
     </div>
   </div>
 
-  <!-- Supabase + app script -->
   <script type="module">
+    // --------------------------
+    // Replace these with your Supabase values
+    // --------------------------
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-    // ----- REPLACE WITH YOUR VALUES -----
     const SUPABASE_URL = 'https://ytjlknmtfwlhqcgszxid.supabase.co';
-    const SUPABASE_ANON_KEY = '<YOUR_ANON_KEY_HERE>';
+    const SUPABASE_ANON_KEY = '<REPLACE_WITH_ANON_KEY>';
     const SERVER_ID = 'dreamscape-main';
-    // ------------------------------------
+    // --------------------------
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // UI elems
-    const loginBtn = document.getElementById('login-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const welcome = document.getElementById('welcome');
+    // --- Mobile menu behavior (keeps original behavior) ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburger = document.querySelector('.hamburger');
+      const navMenu = document.querySelector('.nav-menu');
+      const body = document.body;
+      const overlay = document.querySelector('.menu-overlay');
+
+      hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        body.classList.toggle('menu-open');
+      });
+
+      overlay.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+        body.classList.remove('menu-open');
+      });
+    });
+
+    // --- Auth UI (client-side via Supabase) ---
+    const desktopAuth = document.getElementById('desktop-auth-links');
+    const mobileAuth = document.getElementById('mobile-auth-links');
     const loginModal = document.getElementById('login-modal');
     const loginCancel = document.getElementById('login-cancel');
     const loginSend = document.getElementById('login-send');
     const loginEmail = document.getElementById('login-email');
     const loginFeedback = document.getElementById('login-feedback');
+
+    function renderAuthUI(user){
+      // Clear
+      desktopAuth.innerHTML = '';
+      mobileAuth.innerHTML = '';
+
+      if (!user){
+        // logged out
+        const register = document.createElement('button');
+        register.className = 'auth-btn primary';
+        register.textContent = 'Register / Login';
+        register.onclick = () => { loginModal.classList.remove('hidden'); };
+
+        const loginLink = document.createElement('a');
+        loginLink.href = '#';
+        loginLink.className = 'auth-btn';
+        loginLink.textContent = 'Login';
+        loginLink.onclick = (e) => { e.preventDefault(); loginModal.classList.remove('hidden'); };
+
+        desktopAuth.appendChild(register);
+        desktopAuth.appendChild(loginLink);
+
+        // mobile
+        const m1 = document.createElement('a');
+        m1.href = '#';
+        m1.textContent = 'Register';
+        m1.onclick = (e)=>{ e.preventDefault(); loginModal.classList.remove('hidden'); };
+        const m2 = document.createElement('a');
+        m2.href = '#';
+        m2.textContent = 'Login';
+        m2.onclick = (e)=>{ e.preventDefault(); loginModal.classList.remove('hidden'); };
+        mobileAuth.appendChild(m1); mobileAuth.appendChild(m2);
+        return;
+      }
+
+      // logged in -> show welcome + logout
+      const welcome = document.createElement('span');
+      welcome.className = 'welcome';
+      welcome.textContent = `Welcome, ${user.email ?? user.id}`;
+
+      const logout = document.createElement('button');
+      logout.className = 'auth-btn';
+      logout.textContent = 'Logout';
+      logout.onclick = async () => { await supabase.auth.signOut(); };
+
+      desktopAuth.appendChild(welcome);
+      desktopAuth.appendChild(logout);
+
+      const mWelcome = document.createElement('span');
+      mWelcome.textContent = `Welcome, ${user.email ?? user.id}`;
+      const mLogout = document.createElement('a');
+      mLogout.href = '#';
+      mLogout.textContent = 'Logout';
+      mLogout.onclick = (e)=>{ e.preventDefault(); supabase.auth.signOut(); };
+
+      mobileAuth.appendChild(mWelcome);
+      mobileAuth.appendChild(mLogout);
+    }
+
+    // login modal handlers
+    loginCancel.addEventListener('click', () => { loginModal.classList.add('hidden'); loginFeedback.textContent = ''; });
+    loginSend.addEventListener('click', async () => {
+      const email = (loginEmail.value || '').trim();
+      if (!email){ loginFeedback.textContent = 'Enter a valid email.'; return; }
+      loginFeedback.textContent = 'Sending link…';
+      const { error } = await supabase.auth.signInWithOtp({ email });
+      if (error) loginFeedback.textContent = 'Error: ' + error.message;
+      else loginFeedback.textContent = 'Check your email for the sign-in link.';
+    });
+
+    // respond to auth state changes
+    supabase.auth.onAuthStateChange((event, session) => {
+      const user = session?.user ?? null;
+      renderAuthUI(user);
+    });
+
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      renderAuthUI(data?.session?.user ?? null);
+    })();
+
+    // --- Player count logic (poll + realtime) ---
     const serverCountEl = document.getElementById('server-count');
     const serverUpdatedEl = document.getElementById('server-updated');
 
-    // Show/hide auth UI
-    function showLoggedOutUI() {
-      loginBtn.style.display = 'inline-block';
-      logoutBtn.style.display = 'none';
-      welcome.textContent = '';
-    }
-    function showLoggedInUI(user) {
-      loginBtn.style.display = 'none';
-      logoutBtn.style.display = 'inline-block';
-      const displayName = user.user_metadata?.full_name || user.email || user.id;
-      welcome.textContent = `Welcome, ${displayName}`;
-    }
-
-    // Auth functions
-    loginBtn.addEventListener('click', () => loginModal.style.display = 'flex');
-    loginCancel.addEventListener('click', () => {
-      loginModal.style.display = 'none';
-      loginFeedback.textContent = '';
-    });
-
-    loginSend.addEventListener('click', async () => {
-      const email = loginEmail.value && loginEmail.value.trim();
-      if (!email) { loginFeedback.textContent = 'Enter a valid email.'; return; }
-      loginFeedback.textContent = 'Sending link…';
-
-      // magic link sign-in
-      const { error } = await supabase.auth.signInWithOtp({ email });
-      if (error) {
-        loginFeedback.textContent = 'Error: ' + error.message;
-      } else {
-        loginFeedback.textContent = 'Check your inbox for the magic link.';
-      }
-    });
-
-    logoutBtn.addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      // UI will update via onAuthStateChange
-    });
-
-    // React to auth changes
-    supabase.auth.onAuthStateChange((event, session) => {
-      // session may be null (signed out)
-      (async () => {
-        if (session?.user) {
-          // fetch user object to display metadata
-          const user = session.user;
-          showLoggedInUI(user);
-        } else {
-          showLoggedOutUI();
-        }
-      })();
-    });
-
-    // initialize auth state on page load
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data?.session?.user) {
-        showLoggedInUI(data.session.user);
-      } else {
-        showLoggedOutUI();
-      }
-    })();
-
-    // --- Player count fetching & realtime ---
-    async function updateDOM(count, last) {
+    function updateDOM(count, last){
       serverCountEl.textContent = String(count ?? 0);
-      serverCountEl.style.color = '#7CFC00';
       serverUpdatedEl.textContent = 'Last: ' + (last ? new Date(last).toLocaleString() : '—');
+      serverCountEl.style.color = 'var(--accent-green)';
     }
 
-    async function loadCount() {
-      try {
+    async function loadCount(){
+      try{
         const { data, error } = await supabase
           .from('server_stats')
           .select('online_count, last_updated')
           .eq('server_id', SERVER_ID)
           .limit(1)
           .single();
-        if (error) {
+        if (error){
+          // not fatal; show diagnostic in console
           console.debug('supabase select error', error);
           return;
         }
         if (data) updateDOM(data.online_count, data.last_updated);
-      } catch (e) {
+      }catch(e){
         console.error('loadCount failed', e);
       }
     }
 
-    function subscribe() {
+    function subscribeRealtime(){
       const channel = supabase.channel('public:server_stats')
         .on('postgres_changes',
             { event: 'UPDATE', schema: 'public', table: 'server_stats', filter: `server_id=eq.${SERVER_ID}` },
@@ -184,14 +338,13 @@
           console.debug('Realtime status', status);
         });
 
-      // keep ref
       window.__supabase_server_channel = channel;
     }
 
     // init
     loadCount();
     setInterval(loadCount, 15000);
-    subscribe();
+    subscribeRealtime();
   </script>
 </body>
 </html>
