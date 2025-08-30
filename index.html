@@ -381,6 +381,79 @@ session_start(); // Start session
             </div>
         </div>
     </main>
+      <!-- Add this where you want the count to appear (e.g. inside <main>) -->
+  <div style="margin-top:18px; text-align:center;">
+    <strong>Players online: <span id="server-count" style="color: #7CFC00; font-size: 1.6rem;">—</span></strong>
+    <div id="server-updated" style="font-size:0.9rem; opacity:0.85; margin-top:6px;">Last: —</div>
+  </div>
+
+  <!-- Supabase + live fetch/subscription script (paste before </body>) -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    // ---- REPLACE THESE ----
+    const SUPABASE_URL = 'https://<YOUR-PROJECT>.supabase.co';     // from Supabase Settings → API
+    const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';                   // anon/public key (browser)
+    const SERVER_ID = 'dreamscape-main';                          // choose same id in plugin config
+    // ------------------------
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Update DOM helper
+    function updateDOM(count, last) {
+      const el = document.getElementById('server-count');
+      const t = document.getElementById('server-updated');
+      el.textContent = String(count ?? 0);
+      // green color (already inline) — but double check style
+      el.style.color = '#7CFC00';
+      t.textContent = 'Last: ' + (last ? new Date(last).toLocaleString() : '—');
+    }
+
+    // Poll fallback (every 15s)
+    async function loadCount() {
+      try {
+        const { data, error } = await supabase
+          .from('server_stats')
+          .select('online_count, last_updated')
+          .eq('server_id', SERVER_ID)
+          .limit(1)
+          .single();
+        if (error) {
+          console.debug('supabase select error', error);
+          return;
+        }
+        if (data) updateDOM(data.online_count, data.last_updated);
+      } catch (e) {
+        console.error('loadCount failed', e);
+      }
+    }
+
+    // Realtime subscription (fast UI updates)
+    function subscribe() {
+      // create a realtime channel and listen to updates for this server_id
+      const channel = supabase.channel('public:server_stats')
+        .on('postgres_changes',
+            { event: 'UPDATE', schema: 'public', table: 'server_stats', filter: `server_id=eq.${SERVER_ID}` },
+            (payload) => {
+              // payload.new contains updated row
+              const row = payload.new ?? payload;
+              updateDOM(row.online_count, row.last_updated);
+            })
+        .subscribe((status) => {
+          // status: subscribing, connected, etc.
+          console.debug('Realtime status', status);
+        });
+
+      // Keep reference to channel so it can be removed if needed
+      window.__supabase_server_channel = channel;
+    }
+
+    // initialize
+    loadCount();
+    setInterval(loadCount, 15000); // poll as fallback
+    subscribe();
+  </script>
+    
 </body>
 </html>
 
