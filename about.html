@@ -1,6 +1,3 @@
-<?php
-session_start(); // Start session
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,15 +62,6 @@ session_start(); // Start session
             opacity: 1;
         }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1em 2em;
-            background: transparent;
-            position: relative;
-            z-index: 100;
-        }
 
         .nav-menu {
             display: flex;
@@ -122,22 +110,6 @@ session_start(); // Start session
                 margin-right: 15px;
             }
 
-            .nav-menu {
-                position: fixed;
-                left: -66.67%;
-                top: 0;
-                flex-direction: column;
-                background-color: rgba(26, 35, 58, 0.95);
-                width: 66.67%;
-                height: 100vh;
-                z-index: 90;
-                text-align: center;
-                justify-content: flex-start;
-                transition: 0.3s;
-                padding-top: 60px;
-                box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
-                border-right: 1px solid rgba(255, 255, 255, 0.1);
-            }
             
             .nav-menu.active {
                 left: 0;
@@ -152,23 +124,6 @@ session_start(); // Start session
                 padding: 0 10px;
             }
 
-            .nav-menu a {
-                margin: 10px 0;
-                font-size: 1.2rem;
-                display: block;
-                width: 100%;
-                text-align: center;
-                padding: 15px 0;
-                border-radius: 0;
-                border: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .nav-menu a:hover {
-                background: rgba(255, 255, 255, 0.1);
-                color: white;
-                border-color: rgba(255, 255, 255, 0.1);
-            }
 
             /* Only apply these styles to the mobile auth-links */
             .mobile-auth-links {
@@ -203,22 +158,6 @@ session_start(); // Start session
             display: none;
         }
 
-        nav a {
-            color: white;
-            padding: 10px 20px;
-            margin: 0 10px;
-            text-decoration: none;
-            border: 2px solid transparent;
-            border-radius: 20px;
-            transition: all 0.3s ease-in-out;
-            font-weight: 600;
-        }
-
-        nav a:hover {
-            background: white;
-            color: #1a233a;
-            border-color: white;
-        }
 
         .auth-links a {
             margin: 0 5px;
@@ -316,26 +255,16 @@ session_start(); // Start session
             
             <!-- Auth links inside mobile menu -->
             <div class="mobile-auth-links">
-                <?php if (isset($_SESSION['username'])): ?>
-                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                    <a href="logout">Logout</a>
-                <?php else: ?>
-                    <a href="register">Register</a>
-                    <a href="login">Login</a>
-                <?php endif; ?>
+                <a href="register" class="auth-btn register-btn">Register</a>
+                <a href="login" class="auth-btn login-btn">Login</a>
             </div>
         </div>
         
         <!-- Auth links for desktop view -->
         <div class="desktop-auth-links">
-            <?php if (isset($_SESSION['username'])): ?>
-                <span>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <a href="logout">Logout</a>
-            <?php else: ?>
-                <a href="register">Register</a>
-                <a href="login">Login</a>
-            <?php endif; ?>
-        </div>    
+            <a href="register" class="auth-btn register-btn">Register</a>
+            <a href="login" class="auth-btn login-btn">Login</a>
+        </div>
     </nav>
 
     <main>
