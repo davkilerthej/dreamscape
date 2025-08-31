@@ -290,26 +290,45 @@
             }
 
             .nav-menu a {
-                margin: 6px 0;
-                font-size: 1.1rem;
+                margin: 0;
+                font-size: 1.2rem;
                 display: block;
                 width: 100%;
-                text-align: center;
-                padding: 14px 16px;
-                border-radius: 10px;
-                border: 1px solid rgba(0, 255, 136, 0.1);
-                background: linear-gradient(135deg, rgba(0, 255, 136, 0.08) 0%, rgba(0, 204, 119, 0.04) 100%);
-                backdrop-filter: blur(10px);
+                text-align: left;
+                padding: 18px 24px;
+                border: none;
+                border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+                border-radius: 0;
+                background: transparent;
+                backdrop-filter: blur(15px);
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative;
                 overflow: hidden;
                 color: white;
                 text-decoration: none;
                 font-weight: 500;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                box-shadow: none;
                 opacity: 0;
                 transform: translateX(-20px);
                 animation: slideInMenuItem 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                letter-spacing: 0.5px;
+                cursor: pointer;
+            }
+
+            .nav-menu a:first-child {
+                border-top: 1px solid rgba(0, 255, 136, 0.3);
+            }
+
+            .nav-menu a:last-child {
+                border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+            }
+
+            .nav-menu a:first-child {
+                border-top: 1px solid rgba(0, 255, 136, 0.2);
+            }
+
+            .nav-menu a:last-child {
+                border-bottom: 2px solid rgba(0, 255, 136, 0.3);
             }
 
             .nav-menu a:nth-child(1) { animation-delay: 0.1s; }
@@ -355,16 +374,17 @@
             }
 
             .nav-menu a:hover {
-                background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 204, 119, 0.08) 100%);
+                background: linear-gradient(135deg, rgba(0, 255, 136, 0.12) 0%, rgba(0, 204, 119, 0.06) 100%);
                 color: #00ff88;
-                transform: translateY(-1px) scale(1.01);
-                box-shadow: 0 6px 20px rgba(0, 255, 136, 0.25);
-                text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
-                border-color: rgba(0, 255, 136, 0.2);
+                border-bottom-color: rgba(0, 255, 136, 0.6);
+                text-shadow: 0 0 6px rgba(0, 255, 136, 0.3);
+                font-weight: 600;
+                box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.08);
             }
 
             .nav-menu a:active {
-                transform: translateY(0) scale(0.99);
+                background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 204, 119, 0.1) 100%);
+                border-bottom-color: rgba(0, 255, 136, 0.8);
                 transition: all 0.1s ease;
             }
 
@@ -411,6 +431,60 @@
         /* Hide mobile auth-links in desktop view */
         .mobile-auth-links {
             display: none;
+        }
+
+        /* Special styling for auth buttons */
+        .auth-btn {
+            background: linear-gradient(45deg, #2e7d32, #388e3c);
+            border: 2px solid #43a047;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .auth-btn:hover::before {
+            left: 100%;
+        }
+
+        .auth-btn:hover {
+            background: linear-gradient(45deg, #388e3c, #2e7d32);
+            border-color: #1b5e20;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(46, 125, 50, 0.4);
+        }
+
+        .register-btn {
+            background: linear-gradient(45deg, #2e7d32, #388e3c);
+        }
+
+        .login-btn {
+            background: linear-gradient(45deg, #1b5e20, #2e7d32);
+            border-color: #4caf50;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(45deg, #2e7d32, #1b5e20);
+            border-color: #388e3c;
+            box-shadow: 0 6px 15px rgba(27, 94, 32, 0.4);
         }
 
         /* Keyframe animations for menu */
