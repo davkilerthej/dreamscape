@@ -177,14 +177,24 @@
                 margin-right: 15px;
             }
 
-            
-            /* Mobile welcome text specific styling */
-            .mobile-auth-links span {
-                display: block;
-                width: 100%;
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                flex-direction: column;
+                background: linear-gradient(135deg, rgba(10, 15, 26, 0.98) 0%, rgba(26, 35, 58, 0.98) 100%);
+                backdrop-filter: blur(20px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                width: 280px;
+                height: 100vh;
+                z-index: 90;
                 text-align: center;
-                margin-bottom: 10px;
-                padding: 0 10px;
+                justify-content: flex-start;
+                transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                padding: 80px 20px 40px;
+                border-right: 2px solid rgba(0, 255, 136, 0.1);
+                overflow-y: auto;
+                overflow-x: hidden;
             }
 
             .nav-menu.active {
@@ -192,24 +202,34 @@
             }
 
             .nav-menu a {
-                margin: 8px 0;
-                font-size: 1.2rem;
+                margin: 6px 0;
+                font-size: 1.1rem;
                 display: block;
                 width: 100%;
                 text-align: center;
-                padding: 16px 20px;
-                border-radius: 12px;
-                border: none;
-                background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 119, 0.05) 100%);
-                backdrop-filter: blur(15px);
-                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                padding: 14px 16px;
+                border-radius: 10px;
+                border: 1px solid rgba(0, 255, 136, 0.1);
+                background: linear-gradient(135deg, rgba(0, 255, 136, 0.08) 0%, rgba(0, 204, 119, 0.04) 100%);
+                backdrop-filter: blur(10px);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative;
                 overflow: hidden;
                 color: white;
                 text-decoration: none;
                 font-weight: 500;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                opacity: 0;
+                transform: translateX(-20px);
+                animation: slideInMenuItem 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
+
+            .nav-menu a:nth-child(1) { animation-delay: 0.1s; }
+            .nav-menu a:nth-child(2) { animation-delay: 0.15s; }
+            .nav-menu a:nth-child(3) { animation-delay: 0.2s; }
+            .nav-menu a:nth-child(4) { animation-delay: 0.25s; }
+            .nav-menu a:nth-child(5) { animation-delay: 0.3s; }
+            .nav-menu a:nth-child(6) { animation-delay: 0.35s; }
 
             .nav-menu a::before {
                 content: '';
@@ -218,8 +238,8 @@
                 left: -100%;
                 width: 100%;
                 height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.15), transparent);
-                transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.12), transparent);
+                transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
                 z-index: -1;
             }
 
@@ -230,8 +250,8 @@
                 left: 50%;
                 width: 0;
                 height: 0;
-                background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, transparent 70%);
-                transition: all 0.4s ease;
+                background: radial-gradient(circle, rgba(0, 255, 136, 0.15) 0%, transparent 70%);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 transform: translate(-50%, -50%);
                 border-radius: 50%;
                 z-index: -1;
@@ -242,21 +262,31 @@
             }
 
             .nav-menu a:hover::after {
-                width: 300px;
-                height: 300px;
+                width: 250px;
+                height: 250px;
             }
 
             .nav-menu a:hover {
-                background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 204, 119, 0.1) 100%);
+                background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 204, 119, 0.08) 100%);
                 color: #00ff88;
-                transform: translateY(-2px) scale(1.02);
-                box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
-                text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+                transform: translateY(-1px) scale(1.01);
+                box-shadow: 0 6px 20px rgba(0, 255, 136, 0.25);
+                text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+                border-color: rgba(0, 255, 136, 0.2);
             }
 
             .nav-menu a:active {
-                transform: translateY(0) scale(0.98);
+                transform: translateY(0) scale(0.99);
                 transition: all 0.1s ease;
+            }
+
+            /* Mobile welcome text specific styling */
+            .mobile-auth-links span {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+                padding: 0 10px;
             }
 
             /* Only apply these styles to the mobile auth-links */
@@ -277,7 +307,7 @@
                 width: 80%;
                 max-width: 200px;
             }
-            
+
             /* Hide desktop auth-links in mobile view */
             .desktop-auth-links {
                 display: none;
@@ -448,14 +478,14 @@
             <a href="news">News</a>
             <a href="shop">Shop</a>
             <a href="inventory">Inventory</a>
-            
+
             <!-- Auth links inside mobile menu -->
             <div class="mobile-auth-links">
                 <a href="register" class="auth-btn register-btn">Register</a>
                 <a href="login" class="auth-btn login-btn">Login</a>
             </div>
         </div>
-        
+
         <!-- Auth links for desktop view -->
         <div class="desktop-auth-links">
             <a href="register" class="auth-btn register-btn">Register</a>
