@@ -46,9 +46,12 @@
             justify-content: space-between;
             align-items: center;
             padding: 1em 2em;
-            background: transparent;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1a233a 100%);
             position: relative;
             z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
         }
 
         nav a {
@@ -408,6 +411,18 @@
         /* Hide mobile auth-links in desktop view */
         .mobile-auth-links {
             display: none;
+        }
+
+        /* Keyframe animations for menu */
+        @keyframes slideInMenuItem {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
