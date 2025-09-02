@@ -118,7 +118,14 @@
                     showMsg('Logged in! Welcome ' + (j.username || u), true);
                     loginBtn.textContent = 'Success!';
                     updateNav();
-                    setTimeout(() => window.location.href = '/dashboard.html', 700);
+
+                    // Show success modal
+                    const modal = document.getElementById('successModal');
+                    const welcomeUser = document.getElementById('welcomeUser');
+                    welcomeUser.textContent = j.username || u;
+                    modal.style.display = 'block';
+
+                    setTimeout(() => window.location.href = '/index.html', 2500);
                 } catch (err) {
                     console.error('login error', err);
                     showMsg('Network error: ' + String(err), false);
@@ -128,6 +135,15 @@
             });
         });
     </script>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="success-modal">
+        <div class="modal-content">
+            <h2>🎉 Login Successful!</h2>
+            <p>Welcome to Dreamscape, <span id="welcomeUser"></span>!</p>
+            <p>Redirecting you to the home page...</p>
+        </div>
+    </div>
 
     <style>
         body {
@@ -655,6 +671,55 @@
 
         .login-container .msg.success {
             color: #7CFC00;
+        }
+
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #122030, #0b1623);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 2px solid #00ff88;
+            animation: slideUp 0.5s ease;
+        }
+
+        .modal-content h2 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .modal-content p {
+            color: #fff;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translate(-50%, -60%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
         }
     </style>
 </head>

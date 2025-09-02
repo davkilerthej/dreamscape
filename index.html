@@ -27,6 +27,53 @@
             });
         });
     </script>
+
+    <script>
+        // LOGIN STATUS CHECK
+        document.addEventListener('DOMContentLoaded', () => {
+            const ME_API = "https://ytjlknmtfwlhqcgszxid.supabase.co/functions/v1/me";
+
+            async function getMe() {
+                const token = localStorage.getItem('ds_token');
+                if (!token) return null;
+                try {
+                    const r = await fetch(ME_API, {
+                        method: 'GET',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    if (!r.ok) return null;
+                    return await r.json();
+                } catch (e) {
+                    console.error('getMe error', e);
+                    return null;
+                }
+            }
+
+            function updateNav() {
+                const token = localStorage.getItem('ds_token');
+                const loginBtns = document.querySelectorAll('.auth-btn.login-btn');
+                const registerBtns = document.querySelectorAll('.auth-btn.register-btn');
+                if (token) {
+                    loginBtns.forEach(btn => btn.style.display = 'none');
+                    registerBtns.forEach(btn => btn.style.display = 'none');
+                } else {
+                    loginBtns.forEach(btn => btn.style.display = 'inline-block');
+                    registerBtns.forEach(btn => btn.style.display = 'inline-block');
+                }
+            }
+
+            // Check login status on page load
+            (async () => {
+                const user = await getMe();
+                if (user && user.ok) {
+                    updateNav();
+                } else {
+                    updateNav();
+                }
+            })();
+        });
+    </script>
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
