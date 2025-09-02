@@ -1,751 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.querySelector('.hamburger');
-            const navMenu = document.querySelector('.nav-menu');
-            const body = document.body;
-            const overlay = document.querySelector('.menu-overlay');
-            
-            hamburger.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                hamburger.classList.toggle('active');
-                body.classList.toggle('menu-open');
-            });
-            
-            // Close menu when clicking on the overlay
-            overlay.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-                body.classList.remove('menu-open');
-            });
-        });
-    </script>
-
-    <script>
-        const API = "https://ytjlknmtfwlhqcgszxid.supabase.co/functions/v1/login-web";
-
-        document.getElementById('loginBtn').addEventListener('click', async () => {
-            const u = document.getElementById('username').value.trim();
-            const p = document.getElementById('password').value;
-            const msg = document.getElementById('msg');
-            const btn = document.getElementById('loginBtn');
-
-            msg.textContent = "";
-            msg.classList.remove('success');
-
-            if (!u || !p) {
-                msg.textContent = "Enter username and password";
-                return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = "Logging in...";
-            msg.textContent = "Logging in...";
-
-            try {
-                const res = await fetch(API, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ username: u, password: p })
-                });
-                const j = await res.json();
-                if (!res.ok) {
-                    msg.textContent = j.error || ("Login failed (HTTP " + res.status + ")");
-                    btn.disabled = false;
-                    btn.textContent = "Log In";
-                    return;
-                }
-                // success -> store token and redirect
-                localStorage.setItem("ds_token", j.token);
-                msg.classList.add('success');
-                msg.textContent = "Logged in! Welcome " + (j.username || u);
-                btn.textContent = "Success!";
-                // redirect to dashboard
-                setTimeout(() => { window.location.href = "/dashboard.html"; }, 800);
-            } catch (err) {
-                msg.textContent = "Network error: " + String(err);
-                btn.disabled = false;
-                btn.textContent = "Log In";
-            }
-        });
-
-        // Helper function for other pages to request protected /me endpoint
-        async function getMe() {
-            const token = localStorage.getItem("ds_token");
-            if (!token) return null;
-            try {
-                const r = await fetch("https://ytjlknmtfwlhqcgszxid.supabase.co/functions/v1/me", {
-                    headers: { Authorization: "Bearer " + token }
-                });
-                if (!r.ok) return null;
-                return await r.json();
-            } catch (err) {
-                console.error("getMe error:", err);
-                return null;
-            }
-        }
-
-        // Check if already logged in on page load
-        window.addEventListener('DOMContentLoaded', async () => {
-            const user = await getMe();
-            if (user) {
-                document.getElementById('msg').classList.add('success');
-                document.getElementById('msg').textContent = "Already logged in as " + user.user.username;
-                setTimeout(() => { window.location.href = "/dashboard.html"; }, 1000);
-            }
-        });
-    </script>
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(120deg, #1a233a, #4a5673);
-            background-size: 400% 400%;
-            color: white;
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1em 2em;
-            background: linear-gradient(135deg, #0a0f1a 0%, #1a233a 100%);
-            position: relative;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
-        }
-
-        nav a {
-            color: white;
-            padding: 10px 20px;
-            margin: 0 10px;
-            text-decoration: none;
-            border: 2px solid transparent;
-            border-radius: 20px;
-            transition: all 0.3s ease-in-out;
-            font-weight: 600;
-        }
-
-        nav a:hover {
-            background: white;
-            color: #1a233a;
-            border-color: white;
-        }
-
-        .auth-links {
-            display: flex;
-            align-items: center;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2em;
-        }
-
-        .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2.5em;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
-        }
-
-        .login-container h2 {
-            font-size: 2em;
-            margin-bottom: 1.5em;
-            text-align: center;
-            color: #fff;
-        }
-
-        .form-group {
-            margin-bottom: 1.5em;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5em;
-            color: #fff;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #4CAF50;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            background: #45a049;
-            transform: translateY(-2px);
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 1.5em;
-            color: #fff;
-        }
-
-        .register-link a {
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .register-link a:hover {
-            color: #45a049;
-        }
-
-        .error-message {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            color: #ff4d4d;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 1em;
-            text-align: center;
-        }
-
-        /* Prevent scrolling when menu is open */
-        body.menu-open {
-            overflow: hidden;
-        }
-
-        /* Create overlay for mobile menu */
-        .menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 89;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        body.menu-open .menu-overlay {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Hamburger Menu Styling */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            cursor: pointer;
-            z-index: 200;
-            position: relative;
-        }
-
-        .hamburger span {
-            display: block;
-            height: 3px;
-            width: 100%;
-            background-color: white;
-            border-radius: 3px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* Hamburger animation */
-        .hamburger.active span:nth-child(1) {
-            transform: translateY(9px) rotate(45deg);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: translateY(-9px) rotate(-45deg);
-        }
-
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* Hide nav-menu by default on mobile */
-        @media screen and (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-
-            /* Show nav-menu when active */
-            .nav-menu.active {
-                display: flex !important;
-            }
-        }
-
-        /* Responsive styles */
-        @media screen and (max-width: 768px) {
-            .hamburger {
-                display: flex;
-                margin-right: 15px;
-            }
-
-            .nav-menu {
-                position: fixed;
-                left: -100%;
-                top: 0;
-                flex-direction: column;
-                background: linear-gradient(135deg, rgba(10, 15, 26, 0.98) 0%, rgba(26, 35, 58, 0.98) 100%);
-                backdrop-filter: blur(20px);
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-                width: 280px;
-                height: 100vh;
-                z-index: 90;
-                text-align: center;
-                justify-content: flex-start;
-                transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                padding: 80px 20px 40px;
-                border-right: 2px solid rgba(0, 255, 136, 0.1);
-                overflow-y: auto;
-                overflow-x: hidden;
-            }
-
-            .nav-menu.active {
-                left: 0;
-            }
-
-            .nav-menu a {
-                margin: 0;
-                font-size: 1.2rem;
-                display: block;
-                width: 100%;
-                text-align: left;
-                padding: 18px 24px;
-                border: none;
-                border-bottom: 1px solid rgba(0, 255, 136, 0.3);
-                border-radius: 0;
-                background: transparent;
-                backdrop-filter: blur(15px);
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                position: relative;
-                overflow: hidden;
-                color: white;
-                text-decoration: none;
-                font-weight: 500;
-                box-shadow: none;
-                opacity: 0;
-                transform: translateX(-20px);
-                animation: slideInMenuItem 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-                letter-spacing: 0.5px;
-                cursor: pointer;
-            }
-
-            .nav-menu a:first-child {
-                border-top: 1px solid rgba(0, 255, 136, 0.3);
-            }
-
-            .nav-menu a:last-child {
-                border-bottom: 1px solid rgba(0, 255, 136, 0.3);
-            }
-
-            .nav-menu a:first-child {
-                border-top: 1px solid rgba(0, 255, 136, 0.2);
-            }
-
-            .nav-menu a:last-child {
-                border-bottom: 2px solid rgba(0, 255, 136, 0.3);
-            }
-
-            .nav-menu a:nth-child(1) { animation-delay: 0.1s; }
-            .nav-menu a:nth-child(2) { animation-delay: 0.15s; }
-            .nav-menu a:nth-child(3) { animation-delay: 0.2s; }
-            .nav-menu a:nth-child(4) { animation-delay: 0.25s; }
-            .nav-menu a:nth-child(5) { animation-delay: 0.3s; }
-            .nav-menu a:nth-child(6) { animation-delay: 0.35s; }
-
-            .nav-menu a::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.12), transparent);
-                transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                z-index: -1;
-            }
-
-            .nav-menu a::after {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 0;
-                height: 0;
-                background: radial-gradient(circle, rgba(0, 255, 136, 0.15) 0%, transparent 70%);
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                transform: translate(-50%, -50%);
-                border-radius: 50%;
-                z-index: -1;
-            }
-
-            .nav-menu a:hover::before {
-                left: 100%;
-            }
-
-            .nav-menu a:hover::after {
-                width: 250px;
-                height: 250px;
-            }
-
-            .nav-menu a:hover {
-                background: linear-gradient(135deg, rgba(0, 255, 136, 0.12) 0%, rgba(0, 204, 119, 0.06) 100%);
-                color: #00ff88;
-                border-bottom-color: rgba(0, 255, 136, 0.6);
-                text-shadow: 0 0 6px rgba(0, 255, 136, 0.3);
-                font-weight: 600;
-                box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.08);
-            }
-
-            .nav-menu a:active {
-                background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 204, 119, 0.1) 100%);
-                border-bottom-color: rgba(0, 255, 136, 0.8);
-                transition: all 0.1s ease;
-            }
-
-            /* Mobile welcome text specific styling */
-            .mobile-auth-links span {
-                display: block;
-                width: 100%;
-                text-align: center;
-                margin-bottom: 10px;
-                padding: 0 10px;
-            }
-
-            /* Only apply these styles to the mobile auth-links */
-            .mobile-auth-links {
-                display: flex;
-                position: absolute;
-                bottom: 40px;
-                left: 0;
-                width: 100%;
-                flex-direction: column;
-                align-items: center;
-                z-index: 91;
-                gap: 0.75rem;
-            }
-
-            .mobile-auth-links a, .mobile-auth-links span {
-                margin: 0;
-                width: 80%;
-                max-width: 200px;
-            }
-            
-            /* Hide desktop auth-links in mobile view */
-            .desktop-auth-links {
-                display: none;
-            }
-        }
-
-        /* Desktop auth-links styling (default) */
-        .desktop-auth-links {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Hide mobile auth-links in desktop view */
-        .mobile-auth-links {
-            display: none;
-        }
-
-        /* Special styling for auth buttons */
-        .auth-btn {
-            background: linear-gradient(45deg, #2e7d32, #388e3c);
-            border: 2px solid #43a047;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .auth-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .auth-btn:hover::before {
-            left: 100%;
-        }
-
-        .auth-btn:hover {
-            background: linear-gradient(45deg, #388e3c, #2e7d32);
-            border-color: #1b5e20;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(46, 125, 50, 0.4);
-        }
-
-        .register-btn {
-            background: linear-gradient(45deg, #2e7d32, #388e3c);
-        }
-
-        .login-btn {
-            background: linear-gradient(45deg, #1b5e20, #2e7d32);
-            border-color: #4caf50;
-        }
-
-        .login-btn:hover {
-            background: linear-gradient(45deg, #2e7d32, #1b5e20);
-            border-color: #388e3c;
-            box-shadow: 0 6px 15px rgba(27, 94, 32, 0.4);
-        }
-
-        /* Keyframe animations for menu */
-        @keyframes slideInMenuItem {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Login enhancements */
-        .login-container {
-            background: linear-gradient(180deg,#122030,#0b1623);
-            padding: 24px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 320px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.6);
-            box-sizing: border-box;
-        }
-
-        .login-container input, .login-container button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: transparent;
-            color: #fff;
-            font-size: 1em;
-        }
-
-        .login-container button {
-            background: #14a248;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .login-container button:hover {
-            background: #0f3a1f;
-        }
-
-        .login-container button:disabled {
-            background: #666;
-            cursor: not-allowed;
-        }
-
-        .login-container small {
-            color: #aab;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .login-container .msg {
-            margin-top: 8px;
-            min-height: 20px;
-            color: #ffcccb;
-            font-size: 0.9em;
-        }
-
-        .login-container .msg.success {
-            color: #7CFC00;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* (kept your style but trimmed in this snippet for brevity) */
+    body { font-family: 'Poppins', sans-serif; margin:0; padding:0; background: linear-gradient(120deg,#1a233a,#4a5673); color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+    nav{ /* ... keep your nav styling ... */ }
+    .login-container{ background: linear-gradient(180deg,#122030,#0b1623); padding:24px; border-radius:12px; width:100%; max-width:320px; box-shadow:0 6px 24px rgba(0,0,0,0.6); box-sizing:border-box; margin:auto; }
+    .login-container input, .login-container button{ width:100%; padding:10px; margin-top:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:transparent; color:#fff; font-size:1em; }
+    .login-container button{ background:#14a248; border:none; font-weight:600; cursor:pointer; }
+    .login-container button:disabled{ background:#666; cursor:not-allowed; }
+    .login-container .msg{ margin-top:8px; min-height:20px; color:#ffcccb; font-size:0.9em; }
+    .login-container .msg.success{ color:#7CFC00; }
+    /* keep rest of your CSS in styles.css or inline as before */
+  </style>
 </head>
 <body>
-    <div class="menu-overlay"></div>
-    <nav>
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="nav-menu">
-            <a href="index">Home</a>
-            <a href="about">About</a>
-            <a href="contact">Contact</a>
-            <a href="news">News</a>
-            <a href="shop">Shop</a>
-            <a href="inventory">Inventory</a>
+  <div class="menu-overlay"></div>
+  <nav>
+    <!-- keep your nav markup -->
+    <div class="hamburger"><span></span><span></span><span></span></div>
+    <div class="nav-menu">
+      <a href="index">Home</a>
+      <a href="about">About</a>
+      <a href="contact">Contact</a>
+      <a href="news">News</a>
+      <a href="shop">Shop</a>
+      <a href="inventory">Inventory</a>
+      <div class="mobile-auth-links">
+        <a href="register" class="auth-btn register-btn">Register</a>
+        <a href="login" class="auth-btn login-btn">Login</a>
+      </div>
+    </div>
+    <div class="desktop-auth-links">
+      <a href="register" class="auth-btn register-btn">Register</a>
+      <a href="login" class="auth-btn login-btn">Login</a>
+    </div>
+  </nav>
 
-            <!-- Auth links inside mobile menu -->
-            <div class="mobile-auth-links">
-                <a href="register" class="auth-btn register-btn">Register</a>
-                <a href="login" class="auth-btn login-btn">Login</a>
-            </div>
-        </div>
+  <main>
+    <div class="login-container">
+      <h2>Dreamscape Login</h2>
+      <small>Use the username & password you registered in Minecraft.</small>
+      <input id="username" placeholder="Username" autocomplete="username" />
+      <input id="password" placeholder="Password" type="password" autocomplete="current-password" />
+      <button id="loginBtn">Log In</button>
+      <div class="msg" id="msg"></div>
+      <div class="register-link">Don't have an account? <a href="register">Register here</a></div>
+    </div>
+  </main>
 
-        <!-- Auth links for desktop view -->
-        <div class="desktop-auth-links">
-            <a href="register" class="auth-btn register-btn">Register</a>
-            <a href="login" class="auth-btn login-btn">Login</a>
-        </div>
-    </nav>
+  <footer>
+    <!-- keep your footer markup -->
+  </footer>
 
-    <main>
-        <div class="login-container">
-            <h2>Dreamscape Login</h2>
-            <small>Use the username & password you registered in Minecraft.</small>
-            <input id="username" placeholder="Username" />
-            <input id="password" placeholder="Password" type="password" />
-            <button id="loginBtn">Log In</button>
-            <div class="msg" id="msg"></div>
-            <div class="register-link">
-                Don't have an account? <a href="register">Register here</a>
-            </div>
-        </div>
-    </main>
+  <!-- SCRIPTS: run after DOM is ready -->
+  <script>
+    // hamburger/menu behavior (your original)
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburger = document.querySelector('.hamburger');
+      const navMenu = document.querySelector('.nav-menu');
+      const body = document.body;
+      const overlay = document.querySelector('.menu-overlay');
+      if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+          navMenu.classList.toggle('active');
+          hamburger.classList.toggle('active');
+          body.classList.toggle('menu-open');
+        });
+      }
+      if (overlay) {
+        overlay.addEventListener('click', () => {
+          navMenu.classList.remove('active');
+          hamburger.classList.remove('active');
+          body.classList.remove('menu-open');
+        });
+      }
+    });
+  </script>
 
-    <!-- Footer Section -->
-    <footer class="footer-section">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <h3>Dreamscape</h3>
-                    <p>The ultimate Minecraft server experience where adventure and creativity collide.</p>
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="Discord">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="social-link" aria-label="Twitter">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="social-link" aria-label="YouTube">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
+  <script>
+  // LOGIN logic (runs after DOMContentLoaded)
+  document.addEventListener('DOMContentLoaded', () => {
+    const API = "https://ytjlknmtfwlhqcgszxid.supabase.co/functions/v1/login-web"; // update if different
+    const ME_API = "https://ytjlknmtfwlhqcgszxid.supabase.co/functions/v1/me";
 
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4>Navigation</h4>
-                        <ul>
-                            <li><a href="index">Home</a></li>
-                            <li><a href="about">About</a></li>
-                            <li><a href="news">News</a></li>
-                            <li><a href="shop">Shop</a></li>
-                        </ul>
-                    </div>
+    const loginBtn = document.getElementById('loginBtn');
+    const msgEl = document.getElementById('msg');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
 
-                    <div class="footer-column">
-                        <h4>Support</h4>
-                        <ul>
-                            <li><a href="contact">Contact Us</a></li>
-                            <li><a href="#">Help Center</a></li>
-                            <li><a href="#">Rules</a></li>
-                            <li><a href="#">Report Player</a></li>
-                        </ul>
-                    </div>
+    function showMsg(text, success = false) {
+      msgEl.textContent = text;
+      msgEl.classList.toggle('success', success);
+    }
 
-                    <div class="footer-column">
-                        <h4>Community</h4>
-                        <ul>
-                            <li><a href="#">Discord Server</a></li>
-                            <li><a href="#">Forums</a></li>
-                            <li><a href="#">Events</a></li>
-                            <li><a href="#">Leaderboards</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+    async function getMe() {
+      const token = localStorage.getItem('ds_token');
+      if (!token) return null;
+      try {
+        const r = await fetch(ME_API, {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!r.ok) return null;
+        return await r.json();
+      } catch (e) {
+        console.error('getMe error', e);
+        return null;
+      }
+    }
 
-            <div class="footer-bottom">
-                <div class="footer-bottom-content">
-                    <p>&copy; 2025 Dreamscape. All rights reserved.</p>
-                    <div class="footer-bottom-links">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
-                        <a href="#">Cookie Policy</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    // if already logged in, redirect to dashboard
+    (async () => {
+      const user = await getMe();
+      if (user && user.ok) {
+        showMsg("Already logged in as " + user.user.username, true);
+        setTimeout(() => { window.location.href = "/dashboard.html"; }, 900);
+      }
+    })();
+
+    loginBtn.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      const u = usernameInput.value.trim();
+      const p = passwordInput.value;
+      if (!u || !p) {
+        showMsg('Enter username and password', false);
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Logging in...';
+      showMsg('Logging in...');
+
+      try {
+        const res = await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: u, password: p })
+        });
+        const j = await res.json();
+        if (!res.ok) {
+          showMsg(j.error || ('Login failed (HTTP ' + res.status + ')'), false);
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Log In';
+          return;
+        }
+        localStorage.setItem('ds_token', j.token);
+        showMsg('Logged in! Welcome ' + (j.username || u), true);
+        loginBtn.textContent = 'Success!';
+        setTimeout(() => window.location.href = '/dashboard.html', 700);
+      } catch (err) {
+        console.error('login error', err);
+        showMsg('Network error: ' + String(err), false);
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Log In';
+      }
+    });
+  });
+  </script>
 </body>
 </html>
