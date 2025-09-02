@@ -27,6 +27,82 @@
             });
         });
     </script>
+
+    <script>
+        const API = "https://ytjlknmtfwlhqcgszxid.supabase.co/functions/v1/login-web";
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value;
+            const msg = document.getElementById('msg');
+            const btn = document.getElementById('loginBtn');
+
+            msg.textContent = "";
+            msg.classList.remove('success');
+
+            if (!u || !p) {
+                msg.textContent = "Enter username and password";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Logging in...";
+            msg.textContent = "Logging in...";
+
+            try {
+                const res = await fetch(API, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                const j = await res.json();
+                if (!res.ok) {
+                    msg.textContent = j.error || ("Login failed (HTTP " + res.status + ")");
+                    btn.disabled = false;
+                    btn.textContent = "Log In";
+                    return;
+                }
+                // success -> store token and redirect
+                localStorage.setItem("ds_token", j.token);
+                msg.classList.add('success');
+                msg.textContent = "Logged in! Welcome " + (j.username || u);
+                btn.textContent = "Success!";
+                // redirect to dashboard
+                setTimeout(() => { window.location.href = "/dashboard.html"; }, 800);
+            } catch (err) {
+                msg.textContent = "Network error: " + String(err);
+                btn.disabled = false;
+                btn.textContent = "Log In";
+            }
+        });
+
+        // Helper function for other pages to request protected /me endpoint
+        async function getMe() {
+            const token = localStorage.getItem("ds_token");
+            if (!token) return null;
+            try {
+                const r = await fetch("https://ytjlknmtfwlhqcgszxid.supabase.co/functions/v1/me", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+                if (!r.ok) return null;
+                return await r.json();
+            } catch (err) {
+                console.error("getMe error:", err);
+                return null;
+            }
+        }
+
+        // Check if already logged in on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            const user = await getMe();
+            if (user) {
+                document.getElementById('msg').classList.add('success');
+                document.getElementById('msg').textContent = "Already logged in as " + user.user.username;
+                setTimeout(() => { window.location.href = "/dashboard.html"; }, 1000);
+            }
+        });
+    </script>
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -498,6 +574,62 @@
                 transform: translateX(0);
             }
         }
+
+        /* Login enhancements */
+        .login-container {
+            background: linear-gradient(180deg,#122030,#0b1623);
+            padding: 24px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+            box-sizing: border-box;
+        }
+
+        .login-container input, .login-container button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: transparent;
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .login-container button {
+            background: #14a248;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .login-container button:hover {
+            background: #0f3a1f;
+        }
+
+        .login-container button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .login-container small {
+            color: #aab;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .login-container .msg {
+            margin-top: 8px;
+            min-height: 20px;
+            color: #ffcccb;
+            font-size: 0.9em;
+        }
+
+        .login-container .msg.success {
+            color: #7CFC00;
+        }
     </style>
 </head>
 <body>
@@ -532,18 +664,12 @@
 
     <main>
         <div class="login-container">
-            <h2>Welcome Back</h2>
-            <form action="#" method="POST">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" class="submit-btn">Login</button>
-            </form>
+            <h2>Dreamscape Login</h2>
+            <small>Use the username & password you registered in Minecraft.</small>
+            <input id="username" placeholder="Username" />
+            <input id="password" placeholder="Password" type="password" />
+            <button id="loginBtn">Log In</button>
+            <div class="msg" id="msg"></div>
             <div class="register-link">
                 Don't have an account? <a href="register">Register here</a>
             </div>
@@ -611,7 +737,7 @@
 
             <div class="footer-bottom">
                 <div class="footer-bottom-content">
-                    <p>&copy; 2024 Dreamscape. All rights reserved.</p>
+                    <p>&copy; 2025 Dreamscape. All rights reserved.</p>
                     <div class="footer-bottom-links">
                         <a href="#">Privacy Policy</a>
                         <a href="#">Terms of Service</a>

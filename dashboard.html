@@ -1,20 +1,45 @@
-<?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
-    <p>This is your dashboard.</p>
-    <a href="logout">Logout</a>
+    <div id="loading">Loading...</div>
+    <div id="content" style="display: none;">
+        <h1>Welcome, <span id="username"></span>!</h1>
+        <p>This is your dashboard.</p>
+        <a href="logout">Logout</a>
+    </div>
+    <script>
+        async function getMe() {
+            const token = localStorage.getItem('ds_token');
+            if (!token) return null;
+            try {
+                const r = await fetch("https://ytjlknmtfwlhqcgszxid.supabase.co/functions/v1/me", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+                if (!r.ok) return null;
+                return await r.json();
+            } catch (err) {
+                console.error("getMe error:", err);
+                return null;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const user = await getMe();
+            if (!user) {
+                window.location.href = '/login';
+                return;
+            }
+            document.getElementById('username').textContent = user.user.username;
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        });
+    </script>
 </body>
 </html>
